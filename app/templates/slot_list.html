@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% set heading = t.slot_free if free else t.nav_slots %}
+{% set is_index = (not free) %}
+
+{% block title %}{{ heading }} — {{ site_name }}{% endblock %}
+{% block description %}{% if is_index %}{{ t.slot_index_intro }}{% else %}{{ heading }}. {{ t.home_description }}{% endif %}{% endblock %}
+
+{% block content %}
+{% from "partials/macros.html" import breadcrumbs %}
+<section class="py-8">
+  {% set crumbs = [{"name": t.breadcrumb_home, "url": "/" ~ lang ~ "/"}, {"name": t.nav_slots, "url": "/" ~ lang ~ "/igrovi-avtomaty/"}] %}
+  {% if free %}{% set _ = crumbs.append({"name": t.slot_free, "url": "/" ~ lang ~ "/igrovi-avtomaty/bezkoshtovno/"}) %}{% endif %}
+  {{ breadcrumbs(crumbs, site_url) }}
+
+  <h1 class="text-3xl sm:text-4xl font-bold text-slate-900">{{ heading }}</h1>
+  {% if is_index %}
+  <p class="mt-2 text-slate-600 max-w-2xl">{{ t.slot_index_intro }}</p>
+  {% else %}
+  <p class="mt-2 text-slate-600 max-w-2xl">{{ t.slot_free_intro }}</p>
+  {% endif %}
+
+  {# ============================================================
+     SEKCJA 1 — Siatka kart slotow
+     ============================================================ #}
+  {% if slots %}
+  <div class="mt-8 grid gap-5 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
+    {% for slot in slots %}
+    {% include "partials/slot_card.html" %}
+    {% endfor %}
+  </div>
+
+  {# ============================================================
+     SEKCJA 2 — Tabela porownania (tylko strona "wszystkie sloty")
+     ============================================================ #}
+  {% if is_index %}
+  <h2 class="mt-12 text-2xl sm:text-3xl font-bold text-slate-900">{{ t.slot_compare_h2 }}</h2>
+  <p class="mt-2 text-slate-600 max-w-2xl">{{ t.slot_compare_intro }}</p>
+
+  <div class="mt-6 overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+    <table class="w-full text-sm">
+      <thead class="bg-slate-50 text-slate-700 text-left">
+        <tr>
+          <th class="px-4 py-3 font-semibold w-10">{{ t.slot_col_rank }}</th>
+          <th class="px-4 py-3 font-semibold">{{ t.slot_col_name }}</th>
+          <th class="px-4 py-3 font-semibold">{{ t.slot_col_provider }}</th>
+          <th class="px-4 py-3 font-semibold">{{ t.slot_col_rtp }}</th>
+          <th class="px-4 py-3 font-semibold">{{ t.slot_col_paylines }}</th>
+          <th class="px-4 py-3 font-semibold">{{ t.slot_col_volatility }}</th>
+          <th class="px-4 py-3 font-semibold text-right">{{ t.slot_col_action }}</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-200">
+        {% for slot in slots %}
+        <tr class="hover:bg-slate-50">
+          <td class="px-4 py-3 font-bold text-slate-500">{{ loop.index }}</td>
+          <td class="px-4 py-3">
+            <a href="/{{ lang }}/slot/{{ slot.slug }}/" class="font-semibold text-slate-900 hover:text-emerald-700">{{ slot.loc('name', lang) }}</a>
+          </td>
+          <td class="px-4 py-3 text-slate-700">{{ slot.provider or '—' }}</td>
+          <td class="px-4 py-3 font-semibold text-emerald-800">{{ slot.rtp or '—' }}</td>
+          <td class="px-4 py-3 text-slate-700">{{ slot.paylines or '—' }}</td>
+          <td class="px-4 py-3 text-slate-700">{{ slot.loc('volatility', lang) or '—' }}</td>
+          <td class="px-4 py-3 text-right">
+            <a href="/{{ lang }}/slot/{{ slot.slug }}/"
+               class="inline-block text-xs font-medium border border-emerald-600 text-emerald-700 rounded-lg px-3 py-2 hover:bg-emerald-50">
+              {{ t.slot_play_free }}
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+  {% else %}
+  <p class="mt-8 text-slate-500">{{ t.slot_none }}</p>
+  {% endif %}
+
+  {# ============================================================
+     SEKCJA 3 — SEO-tekst
+       - na stronie "wszystkie sloty":          slot_index_seo_{lang}.html
+       - na stronie "sloty za darmo / demo":    slot_free_seo_{lang}.html
+     ============================================================ #}
+  {% if is_index %}
+  {% include "partials/slot_index_seo_" ~ lang ~ ".html" ignore missing %}
+  {% else %}
+  {% include "partials/slot_free_seo_" ~ lang ~ ".html" ignore missing %}
+  {% endif %}
+
+  {% include "partials/author_block.html" %}
+</section>
+{% endblock %}

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 64" width="200" height="64" role="img" aria-label="SpinCity">
+  <rect width="200" height="64" rx="12" fill="#064e3b"/>
+  <circle cx="34" cy="32" r="13" fill="none" stroke="#34d399" stroke-width="4" stroke-dasharray="40 12" stroke-linecap="round"/>
+  <circle cx="34" cy="32" r="4" fill="#34d399"/>
+  <text x="60" y="40" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#ffffff">Spin<tspan fill="#34d399">City</tspan></text>
+</svg>

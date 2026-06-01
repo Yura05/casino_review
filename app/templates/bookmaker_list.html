@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% set heading = category.loc('name', lang) if category else t.bookmaker_all_h1 %}
+{% set is_index = (category is none) %}
+
+{% block title %}{{ heading }} — {{ site_name }}{% endblock %}
+{% block description %}{% if is_index %}{{ t.bookmaker_all_intro }}{% else %}{{ heading }}. {{ t.home_description }}{% endif %}{% endblock %}
+
+{% block content %}
+{% from "partials/macros.html" import breadcrumbs %}
+<section class="py-8">
+  {% set crumbs = [{"name": t.breadcrumb_home, "url": "/" ~ lang ~ "/"}, {"name": t.nav_bookmakers, "url": "/" ~ lang ~ "/bukmekery/"}] %}
+  {% if category %}{% set _ = crumbs.append({"name": category.loc('name', lang), "url": "/" ~ lang ~ "/bukmekery/" ~ category.slug ~ "/"}) %}{% endif %}
+  {{ breadcrumbs(crumbs, site_url) }}
+
+  <h1 class="mt-3 text-3xl sm:text-4xl font-bold text-slate-900">{{ heading }}</h1>
+  {% if is_index %}
+  <p class="mt-2 text-slate-600 max-w-2xl">{{ t.bookmaker_all_intro }}</p>
+  {% endif %}
+
+  {# ============================================================
+     SEKCJA 1 — Ranking kart bukmacherow
+     ============================================================ #}
+  {% if bookmakers %}
+  <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    {% for bookmaker in bookmakers %}
+    {% set rank = loop.index %}
+    {% include "partials/bookmaker_card.html" %}
+    {% endfor %}
+  </div>
+
+  {# ============================================================
+     SEKCJA 2 — Tabela porownania (tylko na stronie "wszyscy bukmacherzy")
+     ============================================================ #}
+  {% if is_index %}
+  <h2 class="mt-12 text-2xl sm:text-3xl font-bold text-slate-900">{{ t.bookmaker_compare_h2 }}</h2>
+  <p class="mt-2 text-slate-600 max-w-2xl">{{ t.bookmaker_compare_intro }}</p>
+
+  <div class="mt-6 overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+    <table class="w-full text-sm">
+      <thead class="bg-slate-50 text-slate-700 text-left">
+        <tr>
+          <th class="px-4 py-3 font-semibold w-10">{{ t.bookmaker_col_rank }}</th>
+          <th class="px-4 py-3 font-semibold">{{ t.bookmaker_col_name }}</th>
+          <th class="px-4 py-3 font-semibold">{{ t.bookmaker_col_rating }}</th>
+          <th class="px-4 py-3 font-semibold">{{ t.bookmaker_col_bonus }}</th>
+          <th class="px-4 py-3 font-semibold">{{ t.bookmaker_col_license }}</th>
+          <th class="px-4 py-3 font-semibold">{{ t.bookmaker_col_min_deposit }}</th>
+          <th class="px-4 py-3 font-semibold text-right">{{ t.bookmaker_col_cta }}</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-200">
+        {% for bookmaker in bookmakers %}
+        <tr class="hover:bg-slate-50">
+          <td class="px-4 py-3 font-bold text-slate-500">{{ loop.index }}</td>
+          <td class="px-4 py-3">
+            <a href="/{{ lang }}/bukmeker/{{ bookmaker.slug }}/" class="font-semibold text-slate-900 hover:text-emerald-700">{{ bookmaker.name }}</a>
+          </td>
+          <td class="px-4 py-3 text-amber-600 font-medium">★ {{ "%.1f"|format(bookmaker.rating) }}</td>
+          <td class="px-4 py-3 font-semibold text-emerald-800">{{ bookmaker.loc('bonus', lang) or '—' }}</td>
+          <td class="px-4 py-3 text-slate-700">
+            {{ bookmaker.license or '—' }}{% if bookmaker.license_number %} <span class="text-slate-400">·</span> {{ bookmaker.license_number }}{% endif %}
+          </td>
+          <td class="px-4 py-3 text-slate-700">{{ bookmaker.min_deposit or '—' }}</td>
+          <td class="px-4 py-3 text-right">
+            {% if bookmaker.affiliate_link %}
+            <a href="{{ bookmaker.affiliate_link }}" target="_blank" rel="nofollow sponsored noopener"
+               class="inline-block text-xs font-medium bg-emerald-600 text-white rounded-lg px-3 py-2 hover:bg-emerald-700">
+              {{ t.bookmaker_bet }}
+            </a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+  {% else %}
+  <p class="mt-8 text-slate-500">{{ t.bookmaker_none }}</p>
+  {% endif %}
+
+  {# ============================================================
+     SEKCJA 3 — SEO-tekst
+       - na stronie indeksowej: bookmaker_index_seo_{lang}.html
+       - na stronie kategorii:  bookmaker_category_seo_{slug}_{lang}.html
+     ============================================================ #}
+  {% if is_index %}
+  {% include "partials/bookmaker_index_seo_" ~ lang ~ ".html" ignore missing %}
+  {% else %}
+  {% include "partials/bookmaker_category_seo_" ~ category.slug ~ "_" ~ lang ~ ".html" ignore missing %}
+  {% endif %}
+
+  {% include "partials/author_block.html" %}
+</section>
+{% endblock %}

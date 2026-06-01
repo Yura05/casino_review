@@ -1,0 +1,21 @@
+{# Karta slotu. Wymaga w kontekście: slot, lang, t. #}
+<article class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+  <a href="/{{ lang }}/slot/{{ slot.slug }}/" class="block">
+    {% if slot.image %}
+    <img src="{{ url_for('static', path=slot.image) }}" alt="{{ slot.loc('name', lang) }}"
+         class="w-full h-32 object-cover" loading="lazy">
+    {% else %}
+    <div class="h-32 bg-gradient-to-br from-emerald-600 to-emerald-800 flex items-center justify-center px-3 text-center text-white font-bold">
+      {{ slot.loc('name', lang) }}
+    </div>
+    {% endif %}
+  </a>
+  <div class="p-4 flex flex-col flex-1">
+    <h2 class="font-bold text-slate-900">{{ slot.loc('name', lang) }}</h2>
+    <p class="mt-1 text-xs text-slate-500">
+      {{ slot.provider or '' }}{% if slot.rtp %} · RTP {{ slot.rtp }}{% endif %}
+    </p>
+    <a href="/{{ lang }}/slot/{{ slot.slug }}/"
+       class="mt-auto pt-3 text-sm font-medium text-emerald-700 hover:underline">{{ t.card_review }} →</a>
+  </div>
+</article>

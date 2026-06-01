@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}{{ t.payment_list_prefix }} {{ method.name }} — {{ site_name }}{% endblock %}
+{% block description %}{{ method.intro or (t.payment_list_prefix ~ ' ' ~ method.name) }}{% endblock %}
+
+{% block content %}
+{% from "partials/macros.html" import breadcrumbs %}
+<section class="py-8">
+  {{ breadcrumbs([
+    {"name": t.breadcrumb_home, "url": "/" ~ lang ~ "/"},
+    {"name": t.nav_payments, "url": ""},
+    {"name": method.name, "url": "/" ~ lang ~ "/oplata/" ~ method.slug ~ "/"}
+  ], site_url) }}
+  <h1 class="text-3xl sm:text-4xl font-bold text-slate-900">{{ t.payment_list_prefix }} {{ method.name }}</h1>
+  {% if method.intro %}
+  <p class="mt-3 text-slate-600 max-w-2xl">{{ method.intro }}</p>
+  {% endif %}
+
+  {% if method.steps %}
+  <h2 class="mt-8 text-xl font-bold text-slate-900">{{ t.payment_how_to }} ({{ method.name }})</h2>
+  <ol class="mt-3 list-decimal list-inside space-y-1 text-slate-700 max-w-2xl">
+    {% for step in method.steps %}
+    <li>{{ step }}</li>
+    {% endfor %}
+  </ol>
+  {% endif %}
+
+  <h2 class="mt-8 text-xl font-bold text-slate-900">{{ t.payment_top }}</h2>
+  {% if casinos %}
+  <div class="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    {% for casino in casinos %}
+    {% set rank = loop.index %}
+    {% include "partials/casino_card.html" %}
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="mt-4 text-slate-500">{{ t.card_no_casinos }}</p>
+  {% endif %}
+
+  {% include "partials/author_block.html" %}
+</section>
+{% endblock %}

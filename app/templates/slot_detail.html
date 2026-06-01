@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}{{ t.slot_item_prefix }} {{ slot.loc('name', lang) }} — {{ site_name }}{% endblock %}
+{% block description %}{{ slot.loc('description', lang) or (t.slot_item_prefix ~ ' ' ~ slot.loc('name', lang)) }}{% endblock %}
+
+{% block content %}
+{% from "partials/macros.html" import breadcrumbs %}
+<article class="max-w-4xl mx-auto">
+  {{ breadcrumbs([
+    {"name": t.breadcrumb_home, "url": "/" ~ lang ~ "/"},
+    {"name": t.nav_slots, "url": "/" ~ lang ~ "/igrovi-avtomaty/"},
+    {"name": slot.loc('name', lang), "url": "/" ~ lang ~ "/slot/" ~ slot.slug ~ "/"}
+  ], site_url) }}
+
+  {# ===== Hero ===== #}
+  <div class="mt-3 rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+    <div class="grid sm:grid-cols-2">
+      {% if slot.image %}
+      <img src="{{ url_for('static', path=slot.image) }}" alt="{{ slot.loc('name', lang) }}"
+           class="w-full h-full min-h-[12rem] object-cover">
+      {% else %}
+      <div class="min-h-[12rem] bg-gradient-to-br from-emerald-600 to-emerald-800 flex items-center justify-center px-4 py-8 text-center text-white text-2xl font-bold">
+        {{ slot.loc('name', lang) }}
+      </div>
+      {% endif %}
+      <div class="p-6 flex flex-col">
+        <h1 class="text-2xl font-bold text-slate-900">{{ t.slot_item_prefix }} {{ slot.loc('name', lang) }}</h1>
+        {% if slot.provider %}
+        <p class="mt-1 text-slate-500">{{ t.slot_provider }}: {{ slot.provider }}</p>
+        {% endif %}
+        <a href="#where" class="mt-4 inline-block text-center font-medium bg-emerald-600 text-white rounded-lg px-6 py-3 hover:bg-emerald-700">
+          {{ t.slot_play_free }}
+        </a>
+      </div>
+    </div>
+  </div>
+
+  {# ===== Szybkie fakty ===== #}
+  <div class="mt-6 grid gap-3 grid-cols-2 sm:grid-cols-4 text-sm">
+    {% macro fact(label, value) %}
+    {% if value %}
+    <div class="rounded-lg border border-slate-200 bg-white p-3">
+      <div class="text-xs text-slate-500">{{ label }}</div>
+      <div class="mt-0.5 font-medium text-slate-900">{{ value }}</div>
+    </div>
+    {% endif %}
+    {% endmacro %}
+    {{ fact(t.slot_provider, slot.provider) }}
+    {{ fact("RTP", slot.rtp) }}
+    {{ fact(t.slot_volatility, slot.loc('volatility', lang)) }}
+    {{ fact(t.slot_paylines, slot.paylines) }}
+  </div>
+
+  {# ===== Opis ===== #}
+  {% set desc = slot.loc('description', lang) %}
+  {% if desc %}
+  <section class="mt-8">
+    <h2 class="text-xl font-bold text-slate-900">{{ t.slot_about }}</h2>
+    {% for p in desc|paragraphs %}
+    <p class="mt-3 text-slate-700 leading-relaxed">{{ p }}</p>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {# ===== Bogata sekcja SEO per-slot (plik per slug + jezyk, brak = brak sekcji) =====
+     Konwencja nazwy: slot_seo_{slug}_{lang}.html (np. slot_seo_book-of-dead_uk.html) #}
+  {% include "partials/slot_seo_" ~ slot.slug ~ "_" ~ lang ~ ".html" ignore missing %}
+
+  {# ===== Gdzie grać na pieniądze ===== #}
+  {% if casinos %}
+  <section id="where" class="mt-8">
+    <h2 class="text-xl font-bold text-slate-900">{{ t.slot_where }}</h2>
+    <div class="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {% for casino in casinos %}
+      {% set rank = loop.index %}
+      {% include "partials/casino_card.html" %}
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% include "partials/author_block.html" %}
+</article>
+{% endblock %}

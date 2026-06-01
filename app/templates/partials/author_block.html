@@ -1,0 +1,20 @@
+{# Blok autora (E-E-A-T). Wymaga w kontekście: author, lang, t. Renderuje się tylko gdy author istnieje. #}
+{% if author %}
+<aside class="mt-8 rounded-xl border border-slate-200 bg-white p-5 flex items-start gap-4">
+  {% if author.avatar %}
+  <img src="{{ url_for('static', path=author.avatar) }}" alt="{{ author.loc('name', lang) }}"
+       class="w-16 h-16 rounded-full shrink-0" width="64" height="64" loading="lazy">
+  {% endif %}
+  <div class="min-w-0">
+    <p class="text-xs uppercase tracking-wide text-slate-400">{{ t.author_block_title }}</p>
+    <p class="font-bold text-slate-900">{{ author.loc('name', lang) }}</p>
+    {% if author.loc('role', lang) %}
+    <p class="text-sm text-emerald-700">{{ author.loc('role', lang) }}</p>
+    {% endif %}
+    {% set abio = author.loc('bio', lang) %}
+    {% if abio %}<p class="mt-2 text-sm text-slate-600">{{ abio | truncate(160) }}</p>{% endif %}
+    <a href="/{{ lang }}/avtor/{{ author.slug }}/"
+       class="mt-2 inline-block text-sm font-medium text-emerald-700 hover:underline">{{ t.author_profile }} →</a>
+  </div>
+</aside>
+{% endif %}

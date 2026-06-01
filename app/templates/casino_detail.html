@@ -1,0 +1,315 @@
+{% extends "base.html" %}
+
+{% block title %}{{ casino.name }} — {{ t.detail_review }} {{ current_year }} · {{ site_name }}{% endblock %}
+{% block description %}{{ casino.loc('description', lang) or casino.loc('overview', lang) or t.home_description }}{% endblock %}
+
+{% block extra_head %}
+{% for s in schemas %}
+<script type="application/ld+json">{{ s | tojson }}</script>
+{% endfor %}
+{% endblock %}
+
+{% block content %}
+{% from "partials/macros.html" import stars, pay_icons, breadcrumbs, casino_badges %}
+<article class="max-w-4xl mx-auto">
+  {% set crumbs = [{"name": t.breadcrumb_home, "url": "/" ~ lang ~ "/"}] %}
+  {% if casino.categories %}{% set _ = crumbs.append({"name": casino.categories[0].loc('name', lang), "url": "/" ~ lang ~ "/kategoriya/" ~ casino.categories[0].slug ~ "/"}) %}{% endif %}
+  {% set _ = crumbs.append({"name": casino.name, "url": "/" ~ lang ~ "/casino/" ~ casino.slug ~ "/"}) %}
+  {{ breadcrumbs(crumbs, site_url) }}
+
+  {# ===== Hero (z bannerem na górze) ===== #}
+  <div class="mt-3 rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+    <img src="{{ url_for('static', path='img/casinos/banners/' ~ casino.slug ~ ('_ru' if lang == 'ru' else '') ~ '.svg') }}"
+         alt="{{ casino.name }} — {{ t.detail_review }}" class="w-full block" width="600" height="150">
+    <div class="p-6">
+      <div class="flex items-center justify-between gap-4">
+        <h1 class="text-3xl font-bold text-slate-900">{{ casino.name }} — {{ t.detail_review }} {{ current_year }}</h1>
+        <div class="text-right shrink-0">
+          {{ stars(casino.rating, "text-xl") }}
+          <div class="text-sm"><span class="font-bold text-slate-900">{{ "%.1f"|format(casino.rating) }}</span><span class="text-slate-400">/5</span></div>
+          <div class="text-xs text-slate-400">{{ t.detail_overall }}</div>
+        </div>
+      </div>
+
+      {% if casino.badges %}
+      <div class="mt-3">{{ casino_badges(casino.badges, t) }}</div>
+      {% endif %}
+
+      {% set bonus = casino.loc('bonus', lang) %}
+      {% if bonus %}
+      <div class="mt-4 flex flex-col sm:flex-row sm:items-center gap-3">
+        <p class="flex-1 rounded-lg bg-emerald-50 text-emerald-800 px-4 py-3 font-medium">{{ bonus }}</p>
+        {% if casino.affiliate_link %}
+        <a href="{{ casino.affiliate_link }}" target="_blank" rel="nofollow sponsored noopener"
+           class="shrink-0 text-center font-medium bg-emerald-600 text-white rounded-lg px-6 py-3 hover:bg-emerald-700">{{ t.card_play }}</a>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {# ===== Szybkie fakty ===== #}
+  <div class="mt-6 grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 text-sm">
+    {% macro fact(label, value) %}
+    {% if value %}
+    <div class="rounded-lg border border-slate-200 bg-white p-3">
+      <div class="text-xs text-slate-500">{{ label }}</div>
+      <div class="mt-0.5 font-medium text-slate-900">{{ value }}</div>
+    </div>
+    {% endif %}
+    {% endmacro %}
+    {{ fact(t.detail_established, casino.established) }}
+    {{ fact(t.card_license, casino.license) }}
+    {{ fact(t.detail_license_number, casino.license_number) }}
+    {{ fact(t.detail_min_deposit, casino.min_deposit) }}
+    {{ fact(t.detail_withdrawal, casino.loc('withdrawal_time', lang)) }}
+  </div>
+
+  {# ===== Zalety / Wady ===== #}
+  {% if casino.loc('pros', lang) or casino.loc('cons', lang) %}
+  <div class="mt-8 grid gap-5 md:grid-cols-2">
+    <div class="rounded-xl border border-emerald-200 bg-emerald-50/50 p-5">
+      <h2 class="font-bold text-emerald-800">{{ t.detail_pros }}</h2>
+      <ul class="mt-3 space-y-2 text-sm text-slate-700">
+        {% for item in casino.loc('pros', lang)|lines %}
+        <li class="flex gap-2"><span class="text-emerald-600 font-bold">✓</span><span>{{ item }}</span></li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="rounded-xl border border-rose-200 bg-rose-50/50 p-5">
+      <h2 class="font-bold text-rose-800">{{ t.detail_cons }}</h2>
+      <ul class="mt-3 space-y-2 text-sm text-slate-700">
+        {% for item in casino.loc('cons', lang)|lines %}
+        <li class="flex gap-2"><span class="text-rose-500 font-bold">✕</span><span>{{ item }}</span></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endif %}
+
+  {# ===== Oceny cząstkowe + chipsy zaufania + metodologia ===== #}
+  {% set scores = [(t.detail_bonuses, casino.score_bonuses), (t.detail_games, casino.score_games), (t.detail_payouts, casino.score_payments), (t.detail_support, casino.score_support)] %}
+  {% if casino.score_bonuses or casino.score_games or casino.score_payments or casino.score_support %}
+  <section class="mt-8">
+    <h2 class="text-xl font-bold text-slate-900">{{ t.detail_ratings }}</h2>
+
+    {# chipsy zaufania #}
+    <div class="mt-3 flex flex-wrap gap-2 text-xs">
+      {% for chip in [t.detail_verified_editor, t.detail_verified_license, t.detail_verified_deposit] %}
+      <span class="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1 text-slate-600">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>{{ chip }}
+      </span>
+      {% endfor %}
+    </div>
+
+    {# paski ocen #}
+    <div class="mt-4 space-y-3 max-w-xl">
+      {% for label, score in scores %}
+      {% if score %}
+      <div>
+        <div class="flex justify-between text-sm">
+          <span class="text-slate-600">{{ label }}</span>
+          <span class="font-semibold text-slate-900">{{ "%.1f"|format(score) }}/5</span>
+        </div>
+        <div class="mt-1 h-2 rounded-full bg-slate-200">
+          <div class="h-2 rounded-full bg-gradient-to-r from-emerald-400 to-emerald-700" style="width: {{ (score / 5 * 100)|round|int }}%"></div>
+        </div>
+      </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+
+    {# blok metodologii #}
+    <div class="mt-5 max-w-xl rounded-lg border-l-4 border-emerald-500 bg-emerald-50 p-4">
+      <h3 class="font-semibold text-emerald-800">{{ t.detail_methodology }}</h3>
+      <p class="mt-1 text-sm text-slate-600">{{ t.detail_methodology_intro }}</p>
+      <ul class="mt-2 space-y-1 text-sm text-slate-700 list-disc pl-5">
+        <li>{{ t.detail_method_bonuses }}</li>
+        <li>{{ t.detail_method_games }}</li>
+        <li>{{ t.detail_method_payments }}</li>
+        <li>{{ t.detail_method_support }}</li>
+      </ul>
+    </div>
+  </section>
+  {% endif %}
+
+  {# ===== Przegląd / O kasynie ===== #}
+  {% set overview = casino.loc('overview', lang) %}
+  {% if overview %}
+  <section class="mt-8">
+    <h2 class="text-xl font-bold text-slate-900">{{ t.detail_about }}</h2>
+    {% for p in overview|paragraphs %}
+    <p class="mt-3 text-slate-700 leading-relaxed">{{ p }}</p>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {# ===== Bonusy ===== #}
+  {% if casino.bonuses %}
+  <section class="mt-8">
+    <h2 class="text-xl font-bold text-slate-900">{{ t.detail_bonuses }}</h2>
+    <div class="mt-3 space-y-3">
+      {% for b in casino.bonuses %}
+      <div class="rounded-lg border border-slate-200 bg-white p-4">
+        <div class="flex items-center justify-between gap-2">
+          <span class="font-semibold text-slate-900">{{ t['bonus_' ~ b.type] | default(b.type, true) }}</span>
+          {% if b.amount %}<span class="text-emerald-700 font-medium">{{ b.amount }}</span>{% endif %}
+        </div>
+        {% set terms = b.loc('terms', lang) %}
+        {% if terms %}
+        <p class="mt-1 text-sm text-slate-600"><span class="font-medium">{{ t.detail_terms }}:</span> {{ terms }}</p>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {# ===== Gry ===== #}
+  {% set games = casino.loc('games', lang) %}
+  {% if games %}
+  <section class="mt-8">
+    <h2 class="text-xl font-bold text-slate-900">{{ t.detail_games }}</h2>
+    {% for p in games|paragraphs %}
+    <p class="mt-3 text-slate-700 leading-relaxed">{{ p }}</p>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {# ===== Płatności ===== #}
+  <section class="mt-8">
+    <h2 class="text-xl font-bold text-slate-900">{{ t.detail_payment }}</h2>
+    {% if casino.payment_methods %}
+    {{ pay_icons(casino.payment_methods) }}
+    {% endif %}
+    {% if casino.loc('withdrawal_time', lang) %}
+    <p class="mt-3 text-sm text-slate-600">{{ t.detail_withdrawal }}: <span class="font-medium text-slate-900">{{ casino.loc('withdrawal_time', lang) }}</span></p>
+    {% endif %}
+    {% for p in casino.loc('payments_info', lang)|paragraphs %}
+    <p class="mt-3 text-slate-700 leading-relaxed">{{ p }}</p>
+    {% endfor %}
+  </section>
+
+  {# ===== Licencja i bezpieczeństwo ===== #}
+  {% set security = casino.loc('security', lang) %}
+  {% if security %}
+  <section class="mt-8">
+    <h2 class="text-xl font-bold text-slate-900">{{ t.detail_security }}</h2>
+    {% for p in security|paragraphs %}
+    <p class="mt-3 text-slate-700 leading-relaxed">{{ p }}</p>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {# ===== Wsparcie ===== #}
+  {% set support = casino.loc('support', lang) %}
+  {% if support %}
+  <section class="mt-8">
+    <h2 class="text-xl font-bold text-slate-900">{{ t.detail_support }}</h2>
+    {% for p in support|paragraphs %}
+    <p class="mt-3 text-slate-700 leading-relaxed">{{ p }}</p>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {# ===== Podsumowanie / Werdykt ===== #}
+  {% set verdict = casino.loc('verdict', lang) %}
+  {% if verdict %}
+  <section class="mt-8 rounded-xl border border-emerald-200 bg-emerald-50 p-6">
+    <div class="flex items-center gap-3">
+      <h2 class="text-xl font-bold text-slate-900">{{ t.detail_verdict }}</h2>
+      <span class="ml-auto inline-flex items-center gap-2">{{ stars(casino.rating, "text-lg") }}<span class="font-bold text-slate-900">{{ "%.1f"|format(casino.rating) }}<span class="text-slate-400 font-normal">/5</span></span></span>
+    </div>
+    {% for p in verdict|paragraphs %}
+    <p class="mt-3 text-slate-700 leading-relaxed">{{ p }}</p>
+    {% endfor %}
+    {% if casino.affiliate_link %}
+    <a href="{{ casino.affiliate_link }}" target="_blank" rel="nofollow sponsored noopener"
+       class="mt-4 inline-block text-center font-medium bg-emerald-600 text-white rounded-lg px-6 py-3 hover:bg-emerald-700">{{ t.card_play }}</a>
+    {% endif %}
+  </section>
+  {% endif %}
+
+  {# ===== Porównanie z popularnymi kasynami ===== #}
+  {% if competitors %}
+  <section class="mt-8">
+    <h2 class="text-xl font-bold text-slate-900">{{ t.detail_compare }}</h2>
+    <div class="mt-4 overflow-x-auto">
+      <table class="w-full text-sm text-left border border-slate-200">
+        <thead>
+          <tr class="bg-slate-100 text-slate-700">
+            <th class="p-3 border-b border-slate-200 font-semibold">Казино</th>
+            <th class="p-3 border-b border-slate-200 font-semibold">{{ t.detail_rating }}</th>
+            <th class="p-3 border-b border-slate-200 font-semibold">{{ t.card_bonus }}</th>
+            <th class="p-3 border-b border-slate-200 font-semibold">{{ t.card_license }}</th>
+          </tr>
+        </thead>
+        <tbody class="text-slate-700">
+          <tr class="bg-emerald-50">
+            <td class="p-3 border-b border-slate-100 font-bold text-slate-900">{{ casino.name }} · {{ t.detail_review }}</td>
+            <td class="p-3 border-b border-slate-100 font-medium">★ {{ "%.1f"|format(casino.rating) }}</td>
+            <td class="p-3 border-b border-slate-100">{{ casino.loc('bonus', lang) or '—' }}</td>
+            <td class="p-3 border-b border-slate-100">{{ casino.license or '—' }}</td>
+          </tr>
+          {% for c in competitors %}
+          <tr>
+            <td class="p-3 border-b border-slate-100 font-medium">
+              <a href="/{{ lang }}/casino/{{ c.slug }}/" class="text-emerald-700 hover:underline">{{ c.name }}</a>
+            </td>
+            <td class="p-3 border-b border-slate-100">★ {{ "%.1f"|format(c.rating) }}</td>
+            <td class="p-3 border-b border-slate-100">{{ c.bonus }}</td>
+            <td class="p-3 border-b border-slate-100">{{ c.license }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+  {% endif %}
+
+  {# ===== FAQ ===== #}
+  {% if casino.faqs %}
+  <section class="mt-8">
+    <h2 class="text-xl font-bold text-slate-900">{{ t.detail_faq }}</h2>
+    <div class="mt-3 space-y-2">
+      {% for f in casino.faqs %}
+      {% if f.loc('question', lang) %}
+      <details class="rounded-lg border border-slate-200 bg-white p-4">
+        <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer flex items-center justify-between gap-2 font-medium text-slate-900">
+          {{ f.loc('question', lang) }}
+          <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </summary>
+        {% if f.loc('answer', lang) %}
+        <p class="mt-2 text-sm text-slate-600 leading-relaxed">{{ f.loc('answer', lang) }}</p>
+        {% endif %}
+      </details>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {# ===== Podobne kasyna (interlinking) ===== #}
+  {% if competitors %}
+  <section class="mt-8">
+    <h2 class="text-xl font-bold text-slate-900">{{ t.detail_similar }}</h2>
+    <div class="mt-4 grid gap-4 grid-cols-1 sm:grid-cols-3">
+      {% for c in competitors[:3] %}
+      <a href="/{{ lang }}/casino/{{ c.slug }}/"
+         class="block rounded-xl border border-slate-200 bg-white p-4 text-center hover:border-emerald-500 hover:shadow-md transition">
+        <img src="{{ url_for('static', path='img/casinos/' ~ c.slug ~ '.svg') }}" alt="{{ c.name }}"
+             class="h-9 w-auto mx-auto" width="160" height="48" loading="lazy">
+        <div class="mt-3 font-bold text-slate-900">{{ c.name }}</div>
+        <div class="mt-0.5 flex items-center justify-center gap-1.5">{{ stars(c.rating) }}<span class="text-xs font-semibold text-slate-700">{{ "%.1f"|format(c.rating) }}</span></div>
+        <div class="mt-1 text-xs text-slate-500">{{ c.bonus }}</div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% include "partials/author_block.html" %}
+</article>
+{% endblock %}

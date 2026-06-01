@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category.loc('name', lang) }} — {{ site_name }}{% endblock %}
+{% block description %}{{ category.loc('name', lang) }}. {{ t.home_description }}{% endblock %}
+
+{% block content %}
+{% from "partials/macros.html" import breadcrumbs %}
+<section class="py-8">
+  {{ breadcrumbs([
+    {"name": t.breadcrumb_home, "url": "/" ~ lang ~ "/"},
+    {"name": category.loc('name', lang), "url": "/" ~ lang ~ "/kategoriya/" ~ category.slug ~ "/"}
+  ], site_url) }}
+  <h1 class="mt-3 text-3xl sm:text-4xl font-bold text-slate-900">{{ category.loc('name', lang) }}</h1>
+
+  {% if casinos %}
+  <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    {% for casino in casinos %}
+    {% set rank = loop.index %}
+    {% include "partials/casino_card.html" %}
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="mt-8 text-slate-500">{{ t.card_no_casinos }}</p>
+  {% endif %}
+
+  {# SEO-tekst dla danej kategorii (osobny plik na język + slug; brak pliku = brak sekcji) #}
+  {% include "partials/category_seo_" ~ category.slug ~ "_" ~ lang ~ ".html" ignore missing %}
+
+  {% include "partials/author_block.html" %}
+</section>
+{% endblock %}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 64" width="200" height="64" role="img" aria-label="GGBet">
+  <rect width="200" height="64" rx="12" fill="#111827"/>
+  <rect x="16" y="24" width="32" height="16" rx="8" fill="#f97316"/>
+  <circle cx="26" cy="32" r="3" fill="#111827"/>
+  <circle cx="38" cy="32" r="3" fill="#111827"/>
+  <text x="58" y="40" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#f97316">GG<tspan fill="#ffffff">bet</tspan></text>
+</svg>

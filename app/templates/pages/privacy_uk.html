@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Політика конфіденційності — {{ site_name }}{% endblock %}
+{% block description %}Політика конфіденційності {{ site_name }}: які дані ми збираємо, як використовуємо файли cookie та які у вас права.{% endblock %}
+
+{% block content %}
+{% from "partials/macros.html" import breadcrumbs %}
+<div class="max-w-3xl">
+  {{ breadcrumbs([
+    {"name": t.breadcrumb_home, "url": "/" ~ lang ~ "/"},
+    {"name": "Політика конфіденційності", "url": "/" ~ lang ~ "/privacy/"}
+  ], site_url) }}
+  <h1 class="text-3xl font-bold text-slate-900">Політика конфіденційності</h1>
+
+  <p class="mt-4 text-slate-700 leading-relaxed">
+    Ця політика описує, які дані збирає {{ site_name }} та як ми їх використовуємо.
+    Користуючись сайтом, ви погоджуєтесь із умовами цієї політики.
+  </p>
+
+  <h2 class="mt-8 text-xl font-bold text-slate-900">Які дані ми збираємо</h2>
+  <ul class="mt-3 list-disc list-inside space-y-1 text-slate-700">
+    <li>Технічні дані: IP-адреса, тип браузера, пристрій (анонімно).</li>
+    <li>Дані про використання сайту через інструменти аналітики.</li>
+    <li>Файли cookie (див. розділ нижче).</li>
+  </ul>
+
+  <h2 class="mt-8 text-xl font-bold text-slate-900">Як ми використовуємо дані</h2>
+  <ul class="mt-3 list-disc list-inside space-y-1 text-slate-700">
+    <li>Для покращення роботи та зручності сайту.</li>
+    <li>Для аналізу відвідуваності та популярності контенту.</li>
+    <li>Для дотримання правових вимог.</li>
+  </ul>
+
+  <h2 class="mt-8 text-xl font-bold text-slate-900">Файли cookie</h2>
+  <p class="mt-3 text-slate-700 leading-relaxed">
+    Сайт використовує файли cookie для коректної роботи та аналітики. Ви можете
+    вимкнути cookie в налаштуваннях браузера, проте деякі функції можуть працювати некоректно.
+  </p>
+
+  <h2 class="mt-8 text-xl font-bold text-slate-900">Треті сторони</h2>
+  <p class="mt-3 text-slate-700 leading-relaxed">
+    Ми можемо використовувати сторонні сервіси аналітики, а також партнерські
+    (афілейт) посилання. Такі сервіси можуть збирати дані відповідно до власних політик конфіденційності.
+  </p>
+
+  <h2 class="mt-8 text-xl font-bold text-slate-900">Ваші права</h2>
+  <p class="mt-3 text-slate-700 leading-relaxed">
+    Ви маєте право запитати інформацію про свої дані, їх виправлення або видалення.
+    Для цього звертайтеся: <span class="text-slate-500">[додати email]</span>.
+  </p>
+
+  <p class="mt-8 text-slate-500 text-sm">Останнє оновлення: [додати дату].</p>
+</div>
+{% endblock %}

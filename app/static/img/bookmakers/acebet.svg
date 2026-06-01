@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 64" width="200" height="64" role="img" aria-label="AceBet">
+  <rect width="200" height="64" rx="12" fill="#18181b"/>
+  <path d="M32 16c6 7 12 11 12 17a6 6 0 0 1-9 5l2 6h-14l2-6a6 6 0 0 1-9-5c0-6 6-10 12-17z" fill="#f97316"/>
+  <text x="58" y="40" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#ffffff">Ace<tspan fill="#f97316">Bet</tspan></text>
+</svg>

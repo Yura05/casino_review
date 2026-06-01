@@ -1,0 +1,12 @@
+/* Wejście dla Tailwind v4. Budujemy z tego statyczny tailwind.css.
+ *
+ * Budowanie (z katalogu projektu):
+ *   .\tools\tailwindcss.exe -i app/static/css/input.css -o app/static/css/tailwind.css --minify
+ * Tryb obserwacji (przebudowuje przy zmianie klas w szablonach):
+ *   .\tools\tailwindcss.exe -i app/static/css/input.css -o app/static/css/tailwind.css --watch
+ */
+
+@import "tailwindcss";
+
+/* Skanuj szablony w poszukiwaniu użytych klas (ścieżka względem tego pliku). */
+@source "../../templates/**/*.html";

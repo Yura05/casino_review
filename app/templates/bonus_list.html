@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% set type_name = t['bonus_' ~ bonus_type] %}
+
+{% block title %}{{ t.bonus_list_prefix }} {{ type_name }} — {{ site_name }}{% endblock %}
+{% block description %}{{ t.bonus_list_intro }}{% endblock %}
+
+{% block content %}
+{% from "partials/macros.html" import breadcrumbs %}
+<section class="py-8">
+  {{ breadcrumbs([
+    {"name": t.breadcrumb_home, "url": "/" ~ lang ~ "/"},
+    {"name": t.nav_bonuses, "url": "/" ~ lang ~ "/bonusy/"},
+    {"name": type_name, "url": "/" ~ lang ~ "/bonusy/" ~ typ ~ "/"}
+  ], site_url) }}
+
+  <h1 class="mt-3 text-3xl sm:text-4xl font-bold text-slate-900">
+    {{ t.bonus_list_prefix }} {{ type_name }}
+  </h1>
+  <p class="mt-2 text-slate-600 max-w-2xl">{{ t.bonus_list_intro }}</p>
+
+  {# ============================================================
+     SEKCJA 1 — Karty bonusow (ranking)
+     ============================================================ #}
+  {% if bonuses %}
+  <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    {% for bonus in bonuses %}
+    {% set rank = loop.index %}
+    {% include "partials/bonus_card.html" %}
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="mt-8 text-slate-500">{{ t.bonus_none_yet }}</p>
+  {% endif %}
+
+  {# ============================================================
+     SEKCJA 2 — Tekst SEO per-typ (plik per typ + jezyk, brak = brak sekcji)
+     Konwencja nazwy: bonus_list_seo_{typ}_{lang}.html (np. bonus_list_seo_no-deposit_uk.html)
+     ============================================================ #}
+  {% include "partials/bonus_list_seo_" ~ typ ~ "_" ~ lang ~ ".html" ignore missing %}
+
+  {% include "partials/author_block.html" %}
+</section>
+{% endblock %}

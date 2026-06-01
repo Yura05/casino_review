@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}{{ t.bonus_index_h1 }} — {{ site_name }}{% endblock %}
+{% block description %}{{ t.bonus_index_intro }}{% endblock %}
+
+{% block content %}
+{% from "partials/macros.html" import breadcrumbs %}
+<section class="py-8">
+  {{ breadcrumbs([
+    {"name": t.breadcrumb_home, "url": "/" ~ lang ~ "/"},
+    {"name": t.nav_bonuses, "url": "/" ~ lang ~ "/bonusy/"}
+  ], site_url) }}
+  {# ============================================================
+     SEKCJA 1 — Typy bonusow (siatka kart-linkow do podstron) — na samej gorze
+     ============================================================ #}
+  <h1 class="text-3xl sm:text-4xl font-bold text-slate-900">{{ t.bonus_types_h2 }}</h1>
+  <p class="mt-2 text-slate-600 max-w-2xl">{{ t.bonus_types_intro }}</p>
+
+  <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    {% for bt in bonus_types %}
+    <a href="/{{ lang }}/bonusy/{{ bt.slug }}/"
+       class="block rounded-xl border border-slate-200 bg-white shadow-sm p-5 hover:border-emerald-500 hover:shadow transition">
+      <span class="text-lg font-bold text-slate-900">{{ t['bonus_' ~ bt.type] }}</span>
+      <span class="block mt-1 text-sm text-emerald-700">{{ t.card_review }} →</span>
+    </a>
+    {% endfor %}
+  </div>
+
+  {# ============================================================
+     SEKCJA 2 — TOP-10 bonusow (ranking kart)
+     ============================================================ #}
+  {% if top_bonuses %}
+  <h2 class="mt-12 text-2xl sm:text-3xl font-bold text-slate-900">{{ t.bonus_top_h2 }}</h2>
+  <p class="mt-2 text-slate-600 max-w-2xl">{{ t.bonus_top_intro }}</p>
+
+  <div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    {% for bonus in top_bonuses %}
+    {% set rank = loop.index %}
+    {% include "partials/bonus_card.html" %}
+    {% endfor %}
+  </div>
+
+  {# ============================================================
+     SEKCJA 3 — Tabela porownania (Kasyno / Typ / Kwota / Wager / Min.dep / CTA)
+     ============================================================ #}
+  <h2 class="mt-12 text-2xl sm:text-3xl font-bold text-slate-900">{{ t.bonus_compare_h2 }}</h2>
+  <p class="mt-2 text-slate-600 max-w-2xl">{{ t.bonus_compare_intro }}</p>
+
+  <div class="mt-6 overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+    <table class="w-full text-sm">
+      <thead class="bg-slate-50 text-slate-700 text-left">
+        <tr>
+          <th class="px-4 py-3 font-semibold w-10">{{ t.bonus_col_rank }}</th>
+          <th class="px-4 py-3 font-semibold">{{ t.bonus_col_casino }}</th>
+          <th class="px-4 py-3 font-semibold">{{ t.bonus_col_type }}</th>
+          <th class="px-4 py-3 font-semibold">{{ t.bonus_col_amount }}</th>
+          <th class="px-4 py-3 font-semibold">{{ t.bonus_col_wager }}</th>
+          <th class="px-4 py-3 font-semibold">{{ t.bonus_col_min_deposit }}</th>
+          <th class="px-4 py-3 font-semibold text-right">{{ t.bonus_col_cta }}</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-200">
+        {% for bonus in top_bonuses %}
+        {% set casino = bonus.casino %}
+        {% set btype_slug = type_to_slug.get(bonus.type) %}
+        <tr class="hover:bg-slate-50">
+          <td class="px-4 py-3 font-bold text-slate-500">{{ loop.index }}</td>
+          <td class="px-4 py-3">
+            <a href="/{{ lang }}/casino/{{ casino.slug }}/" class="font-semibold text-slate-900 hover:text-emerald-700">{{ casino.name }}</a>
+            <span class="block text-xs text-amber-600 font-medium">★ {{ "%.1f"|format(casino.rating) }}</span>
+          </td>
+          <td class="px-4 py-3">
+            {% if btype_slug %}
+            <a href="/{{ lang }}/bonusy/{{ btype_slug }}/" class="text-emerald-700 hover:underline">{{ t['bonus_' ~ bonus.type] }}</a>
+            {% else %}
+            <span class="text-slate-700">{{ t['bonus_' ~ bonus.type] }}</span>
+            {% endif %}
+          </td>
+          <td class="px-4 py-3 font-semibold text-emerald-800">{{ bonus.amount or '—' }}</td>
+          <td class="px-4 py-3 text-slate-700">{{ bonus.wager or '—' }}</td>
+          <td class="px-4 py-3 text-slate-700">{{ bonus.min_deposit or '—' }}</td>
+          <td class="px-4 py-3 text-right">
+            {% if casino.affiliate_link %}
+            <a href="{{ casino.affiliate_link }}" target="_blank" rel="nofollow sponsored noopener"
+               class="inline-block text-xs font-medium bg-emerald-600 text-white rounded-lg px-3 py-2 hover:bg-emerald-700">
+              {{ t.card_play }}
+            </a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="mt-8 text-slate-500">{{ t.bonus_none_yet }}</p>
+  {% endif %}
+
+  {# ============================================================
+     SEKCJA 4 — Tekst SEO (osobny plik na jezyk, brak pliku = brak sekcji)
+     ============================================================ #}
+  {% include "partials/bonus_index_seo_" ~ lang ~ ".html" ignore missing %}
+
+  {% include "partials/author_block.html" %}
+</section>
+{% endblock %}

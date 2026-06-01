@@ -1,0 +1,74 @@
+{# Karta bonusu (ranking). Wymaga w kontekscie: bonus, lang, t, type_to_slug.
+   Opcjonalnie: rank (numer w rankingu). #}
+{% set casino = bonus.casino %}
+{% set btype_slug = type_to_slug.get(bonus.type) %}
+<article class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 flex flex-col">
+  {# --- Naglowek: ranga + logo + ocena --- #}
+  <div class="flex items-center gap-3">
+    {% if rank is defined %}
+    <span class="shrink-0 w-7 h-7 rounded-full bg-slate-900 text-white text-xs font-bold flex items-center justify-center">{{ rank }}</span>
+    {% endif %}
+
+    {% if casino.logo %}
+    <img src="{{ url_for('static', path=casino.logo) }}" alt="{{ casino.name }}"
+         class="h-10 w-auto" width="160" height="50" loading="lazy">
+    {% else %}
+    <div class="h-10 w-10 rounded-lg bg-emerald-600 text-white flex items-center justify-center text-lg font-bold">
+      {{ casino.name[0] }}
+    </div>
+    {% endif %}
+
+    <div class="ml-auto text-right shrink-0">
+      <span class="text-amber-600 font-bold">★ {{ "%.1f"|format(casino.rating) }}</span>
+      <span class="text-slate-400 text-sm">/5</span>
+    </div>
+  </div>
+
+  {# --- Typ bonusu (link do listy) --- #}
+  {% if btype_slug %}
+  <a href="/{{ lang }}/bonusy/{{ btype_slug }}/" class="mt-3 text-xs uppercase tracking-wide text-emerald-700 hover:underline">
+    {{ t['bonus_' ~ bonus.type] }}
+  </a>
+  {% else %}
+  <p class="mt-3 text-xs uppercase tracking-wide text-slate-500">{{ t['bonus_' ~ bonus.type] }}</p>
+  {% endif %}
+
+  {# --- Kwota bonusu (wyrozniona) --- #}
+  {% if bonus.amount %}
+  <div class="mt-2 rounded-lg bg-emerald-50 text-emerald-800 px-3 py-2 text-base font-bold">{{ bonus.amount }}</div>
+  {% endif %}
+
+  {# --- Kasyno (nazwa + link na review) --- #}
+  <p class="mt-3 text-sm text-slate-600">
+    {{ t.bonus_card_at }}
+    <a href="/{{ lang }}/casino/{{ casino.slug }}/" class="font-semibold text-slate-900 hover:text-emerald-700">{{ casino.name }}</a>
+  </p>
+
+  {# --- Warunki (wager + min_deposit) --- #}
+  <dl class="mt-3 grid grid-cols-2 gap-x-3 gap-y-1 text-xs text-slate-500">
+    {% if bonus.wager %}
+    <dt>{{ t.bonus_card_wager }}</dt>
+    <dd class="text-slate-800 font-medium text-right">{{ bonus.wager }}</dd>
+    {% endif %}
+    {% if bonus.min_deposit %}
+    <dt>{{ t.bonus_card_min_deposit }}</dt>
+    <dd class="text-slate-800 font-medium text-right">{{ bonus.min_deposit }}</dd>
+    {% endif %}
+  </dl>
+
+  {# --- Przyciski --- #}
+  <div class="mt-auto pt-4 flex gap-2">
+    <a href="/{{ lang }}/casino/{{ casino.slug }}/"
+       class="flex-1 text-center text-sm font-medium border border-emerald-600 text-emerald-700 rounded-lg px-3 py-2 hover:bg-emerald-50">
+      {{ t.card_review }}
+    </a>
+    {% if casino.affiliate_link %}
+    <a href="{{ casino.affiliate_link }}" target="_blank" rel="nofollow sponsored noopener"
+       class="flex-1 text-center text-sm font-medium bg-emerald-600 text-white rounded-lg px-3 py-2 hover:bg-emerald-700">
+      {{ t.card_play }}
+    </a>
+    {% endif %}
+  </div>
+
+  <p class="mt-3 text-[11px] text-slate-400">{{ t.card_18plus }}</p>
+</article>

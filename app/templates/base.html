@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {# --- SEO: tytuł + opis (nadpisywane na każdej podstronie) --- #}
+  <title>{% block title %}{{ site_name }}{% endblock %}</title>
+  <meta name="description" content="{% block description %}{{ t.footer_tagline }}{% endblock %}">
+
+  {# --- Canonical: bieżąca strona w bieżącym języku --- #}
+  <link rel="canonical" href="{{ site_url }}{{ alt_urls[lang] }}">
+
+  {# --- hreflang: te same treści w innych językach (regionalne kody, kluczowe dla SEO) --- #}
+  {% for l in languages %}
+  <link rel="alternate" hreflang="{{ hreflang[l] }}" href="{{ site_url }}{{ alt_urls[l] }}">
+  {% endfor %}
+  <link rel="alternate" hreflang="x-default" href="{{ site_url }}{{ alt_urls[default_lang] }}">
+
+  {# --- Open Graph --- #}
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{% block og_title %}{{ self.title() }}{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}{{ self.description() }}{% endblock %}">
+  <meta property="og:site_name" content="{{ site_name }}">
+  <meta property="og:locale" content="{{ og_locale }}">
+
+  {# --- Style: prebudowany Tailwind (statyczny CSS, bez JS) + własne nadpisania --- #}
+  <link rel="stylesheet" href="{{ url_for('static', path='css/tailwind.css') }}?v={{ asset_v('css/tailwind.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='css/styles.css') }}?v={{ asset_v('css/styles.css') }}">
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="min-h-screen flex flex-col bg-slate-50 text-slate-800">
+  {% include "partials/header.html" %}
+
+  <main class="flex-1 w-full max-w-6xl mx-auto px-4 py-8">
+    {% block content %}{% endblock %}
+  </main>
+
+  {% include "partials/footer.html" %}
+
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

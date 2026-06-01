@@ -1,0 +1,29 @@
+# Авто-деплой: будь-який push у гілку main -> GitHub заходить по SSH на VPS
+# і запускає deploy/update.sh (git pull + pip install + рестарт сервісу).
+#
+# Потрібні 3 секрети в репозиторії (Settings -> Secrets and variables -> Actions):
+#   VPS_HOST     - IP або домен сервера
+#   VPS_USER     - користувач для SSH (напр. casino)
+#   VPS_SSH_KEY  - ПРИВАТНИЙ ssh-ключ (вміст файлу id_ed25519), якому на сервері
+#                  довірено вхід (його .pub лежить у ~/.ssh/authorized_keys)
+#
+# Деталі налаштування — у deploy/README.md (Крок 7).
+
+name: Deploy to VPS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}   # дозволяє запустити деплой вручну з вкладки Actions
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: bash /home/casino/site_revie/deploy/update.sh

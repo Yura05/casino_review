@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}{{ author.loc('name', lang) }} — {{ site_name }}{% endblock %}
+{% block description %}{{ author.loc('role', lang) }}{% if author.loc('bio', lang) %} · {{ author.loc('bio', lang) | truncate(140) }}{% endif %}{% endblock %}
+
+{% block extra_head %}
+<script type="application/ld+json">{{ schema | tojson }}</script>
+{% endblock %}
+
+{% block content %}
+{% from "partials/macros.html" import breadcrumbs %}
+<article class="max-w-3xl mx-auto py-8">
+  {{ breadcrumbs([
+    {"name": t.breadcrumb_home, "url": "/" ~ lang ~ "/"},
+    {"name": author.loc('name', lang), "url": "/" ~ lang ~ "/avtor/" ~ author.slug ~ "/"}
+  ], site_url) }}
+  <div class="flex items-center gap-5">
+    {% if author.avatar %}
+    <img src="{{ url_for('static', path=author.avatar) }}" alt="{{ author.loc('name', lang) }}"
+         class="w-24 h-24 rounded-full shrink-0" width="96" height="96">
+    {% endif %}
+    <div>
+      <h1 class="text-3xl font-bold text-slate-900">{{ author.loc('name', lang) }}</h1>
+      {% if author.loc('role', lang) %}
+      <p class="mt-1 text-emerald-700">{{ author.loc('role', lang) }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  {% set abio = author.loc('bio', lang) %}
+  {% if abio %}
+  <h2 class="mt-8 text-xl font-bold text-slate-900">{{ t.author_bio_heading }}</h2>
+  <p class="mt-2 text-slate-700 leading-relaxed">{{ abio }}</p>
+  {% endif %}
+</article>
+{% endblock %}

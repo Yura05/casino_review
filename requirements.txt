@@ -1,0 +1,13 @@
+# Web framework
+fastapi>=0.115,<1.0
+uvicorn[standard]>=0.30
+
+# Templates (server-side rendering for SEO)
+jinja2>=3.1
+
+# Database
+sqlalchemy>=2.0,<3.0
+psycopg2-binary>=2.9
+
+# Config / settings from .env
+pydantic-settings>=2.5

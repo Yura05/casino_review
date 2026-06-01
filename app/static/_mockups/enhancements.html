@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ескіз: ТОП-3 покращення (breadcrumbs+JSON-LD / оцінки+методологія / FAQ+схожі)</title>
+<style>
+  :root{
+    --em:#059669; --em7:#047857; --em50:#ecfdf5; --em100:#d1fae5;
+    --s900:#0f172a; --s700:#334155; --s600:#475569; --s500:#64748b; --s400:#94a3b8;
+    --s200:#e2e8f0; --s100:#f1f5f9; --s50:#f8fafc;
+    --amber:#d97706; --amber50:#fffbeb;
+  }
+  *{box-sizing:border-box}
+  body{font-family:"Segoe UI",Arial,sans-serif;background:var(--s100);color:var(--s900);margin:0;padding:32px 16px;line-height:1.5}
+  .wrap{max-width:880px;margin:0 auto}
+  .pagehead{margin:0 0 6px;font-size:26px}
+  .pagelead{color:var(--s600);margin:0 0 28px;font-size:15px}
+  .feat{background:#fff;border:1px solid var(--s200);border-radius:18px;padding:26px;margin-bottom:30px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .badge{display:inline-block;font-size:12px;font-weight:800;color:var(--em7);background:var(--em100);border-radius:999px;padding:4px 12px;margin-bottom:12px;letter-spacing:.3px}
+  .feat h2{margin:0 0 4px;font-size:20px}
+  .feat .why{color:var(--s500);font-size:13.5px;margin:0 0 20px}
+  .demo{background:var(--s50);border:1px dashed var(--s200);border-radius:14px;padding:20px}
+  h3{font-size:15px;margin:22px 0 10px;color:var(--s700)}
+
+  /* breadcrumbs */
+  .crumbs{font-size:13px;color:var(--s500);display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .crumbs a{color:var(--em7);text-decoration:none}
+  .crumbs a:hover{text-decoration:underline}
+  .crumbs .sep{color:var(--s400)}
+  .crumbs .cur{color:var(--s600);font-weight:600}
+
+  /* google serp */
+  .serp{background:#fff;border:1px solid var(--s200);border-radius:12px;padding:16px 18px;max-width:600px}
+  .serp .url{font-size:12px;color:#202124;display:flex;align-items:center;gap:7px}
+  .serp .fav{width:18px;height:18px;border-radius:50%;background:var(--em);color:#fff;font-size:11px;font-weight:800;display:inline-flex;align-items:center;justify-content:center}
+  .serp .crumbline{color:#5f6368}
+  .serp .title{color:#1a0dab;font-size:19px;margin:4px 0 2px;font-weight:400}
+  .serp .stars{color:var(--amber);font-size:14px;letter-spacing:1px}
+  .serp .ratingmeta{color:#70757a;font-size:13px}
+  .serp .snippet{color:#4d5156;font-size:13.5px;margin-top:3px}
+  .arrow{color:var(--em7);font-size:12px;font-weight:700;margin:10px 0 4px}
+
+  pre{background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px 16px;font-size:12px;overflow:auto;margin:0}
+  pre .k{color:#7dd3fc}.pre .s{color:#bef264}
+  pre .s{color:#bef264}.pre .n{color:#fcd34d}
+  pre .n{color:#fcd34d}
+  .note{font-size:12px;color:var(--s500);margin-top:8px}
+
+  /* score bars */
+  .scorebox{display:grid;grid-template-columns:1fr;gap:14px;max-width:560px}
+  .scoreline{display:grid;grid-template-columns:130px 1fr 42px;align-items:center;gap:12px}
+  .scoreline .lbl{font-size:13px;color:var(--s700);font-weight:600}
+  .track{height:9px;background:var(--s200);border-radius:999px;overflow:hidden}
+  .fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#34d399,var(--em7))}
+  .scoreline .val{font-size:13px;font-weight:800;text-align:right;color:var(--s900)}
+  .overall{display:flex;align-items:center;gap:16px;margin-bottom:22px;padding:16px;background:var(--em50);border-radius:14px}
+  .overall .big{font-size:40px;font-weight:800;color:var(--em7);line-height:1}
+  .overall .stars{color:var(--amber);font-size:20px;letter-spacing:2px}
+  .overall .sub{font-size:13px;color:var(--s600)}
+
+  /* methodology */
+  .method{margin-top:18px;border-left:3px solid var(--em);background:var(--em50);border-radius:0 12px 12px 0;padding:14px 18px}
+  .method h4{margin:0 0 6px;font-size:14px;color:var(--em7)}
+  .method ul{margin:0;padding-left:18px;font-size:13px;color:var(--s700)}
+  .method li{margin:3px 0}
+  .verifiedrow{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;font-size:12.5px}
+  .chip{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--s200);border-radius:999px;padding:5px 12px;color:var(--s600)}
+  .chip .dot{width:8px;height:8px;border-radius:50%;background:var(--em)}
+
+  /* FAQ details */
+  details{background:#fff;border:1px solid var(--s200);border-radius:12px;margin-bottom:10px;overflow:hidden}
+  details[open]{box-shadow:0 1px 6px rgba(0,0,0,.06)}
+  summary{cursor:pointer;list-style:none;padding:15px 18px;font-weight:600;font-size:14.5px;color:var(--s900);display:flex;justify-content:space-between;align-items:center;gap:12px}
+  summary::-webkit-details-marker{display:none}
+  summary .plus{flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--em50);color:var(--em7);font-size:16px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;transition:transform .2s}
+  details[open] summary .plus{transform:rotate(45deg)}
+  details .body{padding:0 18px 16px;font-size:13.5px;color:var(--s600)}
+
+  /* similar casinos */
+  .simgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .simcard{background:#fff;border:1px solid var(--s200);border-radius:14px;padding:16px;text-align:center;text-decoration:none;color:inherit;display:block;transition:.15s}
+  .simcard:hover{border-color:var(--em);box-shadow:0 4px 14px rgba(5,150,105,.12);transform:translateY(-2px)}
+  .simlogo{height:34px;border-radius:8px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px;width:96px}
+  .simcard .nm{font-weight:700;font-size:14px}
+  .simcard .rt{color:var(--amber);font-size:13px;font-weight:700;margin-top:3px}
+  .simcard .bo{font-size:11.5px;color:var(--s500);margin-top:6px}
+
+  @media(max-width:640px){
+    .scoreline{grid-template-columns:96px 1fr 38px}
+    .simgrid{grid-template-columns:1fr}
+    .serp .title{font-size:17px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1 class="pagehead">Ескіз: ТОП-3 покращення сторінки огляду казино</h1>
+  <p class="pagelead">Усе показано на прикладі сторінки <b>/uk/casino/parimatch/</b>. Стиль уже наближений до сайту (emerald/slate). Це макет на чистому CSS — без впливу на збірку. Скажи, що подобається / що змінити, і я перенесу в реальні шаблони Jinja.</p>
+
+  <!-- ============ 1 ============ -->
+  <section class="feat">
+    <span class="badge">№1 · SEO</span>
+    <h2>Breadcrumbs (хлібні крихти) + JSON-LD структуровані дані</h2>
+    <p class="why">Breadcrumbs — це навігаційний ланцюжок угорі сторінки (видимий). JSON-LD — невидимий код у &lt;head&gt;, який дає Google зрозуміти, що це огляд із рейтингом → у видачі з'являються ⭐ зірочки + ціна/бонус. Це піднімає CTR на 15–35%.</p>
+
+    <div class="demo">
+      <h3 style="margin-top:0">Як виглядатиме на сторінці (видима частина):</h3>
+      <nav class="crumbs">
+        <a href="#">Головна</a><span class="sep">›</span>
+        <a href="#">Казино</a><span class="sep">›</span>
+        <a href="#">Ліцензовані</a><span class="sep">›</span>
+        <span class="cur">PariMatch</span>
+      </nav>
+
+      <div class="arrow">↓ А ось як цю саму сторінку покаже Google (завдяки JSON-LD):</div>
+      <div class="serp">
+        <div class="url">
+          <span class="fav">C</span>
+          <span><b>CasinoReview</b> <span class="crumbline">https://site.ua › uk › casino › parimatch</span></span>
+        </div>
+        <div class="title">PariMatch огляд 2026 — бонус 100% до 30 000 ₴, ліцензія КРАІЛ</div>
+        <div>
+          <span class="stars">★★★★★</span>
+          <span class="ratingmeta">Рейтинг: 4.7 · 128 відгуків · Бонус: 100% до 30 000 ₴</span>
+        </div>
+        <div class="snippet">Повний огляд PariMatch: ліцензія, виплати, ігри, бонуси та реальний досвід. Наша оцінка 4.7/5 за 8 критеріями…</div>
+      </div>
+      <p class="note">↑ Зірочки, кількість відгуків і бонус — це і є «rich snippet» від JSON-LD. Конкуренти без нього виглядають як звичайний синій лінк.</p>
+
+      <h3>Код, який згенерую в &lt;head&gt; (приклад):</h3>
+<pre>&lt;script type="application/ld+json"&gt;
+{
+  <span class="k">"@context"</span>: <span class="s">"https://schema.org"</span>,
+  <span class="k">"@type"</span>: <span class="s">"Review"</span>,
+  <span class="k">"itemReviewed"</span>: {
+    <span class="k">"@type"</span>: <span class="s">"Organization"</span>,
+    <span class="k">"name"</span>: <span class="s">"PariMatch Casino"</span>
+  },
+  <span class="k">"reviewRating"</span>: {
+    <span class="k">"@type"</span>: <span class="s">"Rating"</span>,
+    <span class="k">"ratingValue"</span>: <span class="n">"4.7"</span>,
+    <span class="k">"bestRating"</span>: <span class="n">"5"</span>
+  },
+  <span class="k">"author"</span>: { <span class="k">"@type"</span>: <span class="s">"Organization"</span>, <span class="k">"name"</span>: <span class="s">"CasinoReview"</span> }
+}
+&lt;/script&gt;</pre>
+      <p class="note">Окремо додам <b>BreadcrumbList</b> (для ланцюжка), <b>FAQPage</b> (з акордеонів нижче) і <b>AggregateRating</b>. Усе генерується автоматично з даних у БД — нічого вручну.</p>
+    </div>
+  </section>
+
+  <!-- ============ 2 ============ -->
+  <section class="feat">
+    <span class="badge">№2 · ДОВІРА</span>
+    <h2>Візуалізація оцінок за критеріями + блок «Методологія»</h2>
+    <p class="why">У моделі вже є поля score_bonuses / score_games / score_payments / score_support — зараз вони ніяк не показані. Перетворюю їх на наочні шкали + пояснюю, звідки береться бал. Це головна валюта review-сайту: прозорість = довіра = конверсія.</p>
+
+    <div class="demo">
+      <div class="overall">
+        <div>
+          <div class="big">4.7</div>
+          <div class="sub">з 5.0</div>
+        </div>
+        <div>
+          <div class="stars">★★★★★</div>
+          <div class="sub">Загальна оцінка редакції · оновлено 24.05.2026</div>
+        </div>
+      </div>
+
+      <div class="verifiedrow">
+        <span class="chip"><span class="dot"></span> Перевірено редактором</span>
+        <span class="chip"><span class="dot"></span> Ліцензія КРАІЛ підтверджена</span>
+        <span class="chip"><span class="dot"></span> Тестовий депозит здійснено</span>
+      </div>
+
+      <div class="scorebox">
+        <div class="scoreline"><span class="lbl">Бонуси</span><div class="track"><div class="fill" style="width:96%"></div></div><span class="val">4.8</span></div>
+        <div class="scoreline"><span class="lbl">Ігри</span><div class="track"><div class="fill" style="width:90%"></div></div><span class="val">4.5</span></div>
+        <div class="scoreline"><span class="lbl">Виплати</span><div class="track"><div class="fill" style="width:94%"></div></div><span class="val">4.7</span></div>
+        <div class="scoreline"><span class="lbl">Підтримка</span><div class="track"><div class="fill" style="width:88%"></div></div><span class="val">4.4</span></div>
+      </div>
+
+      <div class="method">
+        <h4>📋 Як ми оцінюємо казино</h4>
+        <ul>
+          <li><b>Бонуси (25%)</b> — розмір, вейджер, прозорість умов, відсутність прихованих обмежень.</li>
+          <li><b>Ігри (25%)</b> — кількість провайдерів, наявність live-казино, демо-режим.</li>
+          <li><b>Виплати (25%)</b> — швидкість, методи (в т.ч. гривня), ліміти, комісії.</li>
+          <li><b>Підтримка (25%)</b> — україномовний чат, час відповіді, канали зв'язку.</li>
+        </ul>
+      </div>
+      <p class="note">Шкали — чистий CSS (ширина = бал), 0 JS. Відсотки беруться зі score_* автоматично. «Методологію» можна також винести окремою сторінкою з посиланням звідси.</p>
+    </div>
+  </section>
+
+  <!-- ============ 3 ============ -->
+  <section class="feat">
+    <span class="badge">№3 · ENGAGEMENT + SEO</span>
+    <h2>FAQ-акордеони (&lt;details&gt;) + блок «Схожі казино»</h2>
+    <p class="why">Акордеони на нативному &lt;details&gt;/&lt;summary&gt; — розкриваються кліком БЕЗ JS, ідеально для мобільних, і з них генерується FAQPage JSON-LD (ще зірочки/розкривні питання в Google). «Схожі казино» — внутрішня перелінковка, що тримає користувача на сайті й розподіляє SEO-вагу.</p>
+
+    <div class="demo">
+      <h3 style="margin-top:0">Часті запитання (клікни, щоб розкрити):</h3>
+
+      <details open>
+        <summary>Чи легальний PariMatch в Україні? <span class="plus">+</span></summary>
+        <div class="body">Так. PariMatch має ліцензію КРАІЛ (Комісії з регулювання азартних ігор та лотерей) № 150-2021. Це означає легальну роботу, оподаткування виграшів за законом і захист гравців.</div>
+      </details>
+      <details>
+        <summary>Який мінімальний депозит? <span class="plus">+</span></summary>
+        <div class="body">Мінімальний депозит — 100 ₴. Доступні поповнення карткою Visa/Mastercard, Apple Pay та через банківські застосунки.</div>
+      </details>
+      <details>
+        <summary>Скільки часу займає виплата виграшу? <span class="plus">+</span></summary>
+        <div class="body">На картку — від 15 хвилин до 24 годин після верифікації. Перша виплата може зайняти довше через перевірку документів (KYC).</div>
+      </details>
+
+      <h3>Схожі казино:</h3>
+      <div class="simgrid">
+        <a class="simcard" href="#">
+          <div class="simlogo" style="background:#dc2626">Pin-Up</div>
+          <div class="nm">Pin-Up</div>
+          <div class="rt">★ 4.6</div>
+          <div class="bo">120% до 25 000 ₴</div>
+        </a>
+        <a class="simcard" href="#">
+          <div class="simlogo" style="background:#7c3aed">Cosmolot</div>
+          <div class="nm">Cosmolot</div>
+          <div class="rt">★ 4.5</div>
+          <div class="bo">100% + 100 FS</div>
+        </a>
+        <a class="simcard" href="#">
+          <div class="simlogo" style="background:#1d4ed8">FavBet</div>
+          <div class="nm">FavBet</div>
+          <div class="rt">★ 4.4</div>
+          <div class="bo">100% до 20 000 ₴</div>
+        </a>
+      </div>
+      <p class="note">«Схожі» можна підбирати за спільними категоріями (ліцензовані / швидкі виплати) або за близьким рейтингом — автоматично, без ручного ведення.</p>
+    </div>
+  </section>
+
+  <p style="color:var(--s500);font-size:13px;text-align:center;margin:8px 0 40px">
+    Це лише ескіз для оцінки вигляду. Жоден реальний шаблон ще не змінений.
+  </p>
+</div>
+</body>
+</html>

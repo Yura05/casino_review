@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 64" width="210" height="64" role="img" aria-label="PariMatch">
+  <rect width="210" height="64" rx="12" fill="#00733b"/>
+  <circle cx="32" cy="32" r="16" fill="#ffffff"/>
+  <path d="M27 23l16 9-16 9z" fill="#00733b"/>
+  <text x="58" y="40" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#ffffff">Pari<tspan fill="#ffd83d">Match</tspan></text>
+</svg>

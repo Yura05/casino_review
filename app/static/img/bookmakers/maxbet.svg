@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 64" width="200" height="64" role="img" aria-label="MaxBet">
+  <rect width="200" height="64" rx="12" fill="#047857"/>
+  <rect x="18" y="34" width="6" height="12" rx="1.5" fill="#fde047"/>
+  <rect x="29" y="26" width="6" height="20" rx="1.5" fill="#fde047"/>
+  <rect x="40" y="18" width="6" height="28" rx="1.5" fill="#fde047"/>
+  <text x="58" y="40" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#ffffff">Max<tspan fill="#fde047">Bet</tspan></text>
+</svg>

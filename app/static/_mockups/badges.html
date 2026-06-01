@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ескіз: бейджі «ТОП-вибір» на картках казино</title>
+<style>
+  :root{
+    --em:#059669; --em7:#047857; --em50:#ecfdf5; --em100:#d1fae5;
+    --s900:#0f172a; --s700:#334155; --s600:#475569; --s500:#64748b; --s400:#94a3b8;
+    --s200:#e2e8f0; --s100:#f1f5f9; --s50:#f8fafc;
+    --amber:#d97706; --amber500:#f59e0b;
+  }
+  *{box-sizing:border-box}
+  body{font-family:"Segoe UI",Arial,sans-serif;background:var(--s100);color:var(--s900);margin:0;padding:32px 16px;line-height:1.5}
+  .wrap{max-width:1000px;margin:0 auto}
+  h1{font-size:26px;margin:0 0 6px}
+  .lead{color:var(--s600);margin:0 0 28px;font-size:15px;max-width:780px}
+  .feat{background:#fff;border:1px solid var(--s200);border-radius:18px;padding:24px;margin-bottom:28px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .feat h2{margin:0 0 4px;font-size:19px}
+  .feat .why{color:var(--s500);font-size:13.5px;margin:0 0 20px;max-width:760px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media(max-width:860px){.grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.grid{grid-template-columns:1fr}}
+
+  /* === karta kasyna (kopia stylu serwisu) === */
+  .card{position:relative;background:#fff;border:1px solid var(--s200);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,.06);padding:20px;display:flex;flex-direction:column;overflow:hidden}
+  .card.hl{border-color:var(--em);box-shadow:0 6px 20px rgba(5,150,105,.15)}
+  .chead{display:flex;align-items:center;gap:12px}
+  .rank{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--s900);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+  .logo{height:36px;border-radius:8px;color:#fff;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;padding:0 12px}
+  .rate{margin-left:auto;color:var(--amber);font-weight:700;font-size:15px}
+  .rate small{color:var(--s400);font-weight:400}
+  .cname{margin:12px 0 0;font-size:17px;font-weight:700}
+  .bonus{margin-top:8px;background:var(--em50);color:var(--em7);border-radius:8px;padding:8px 12px;font-size:13px;font-weight:600}
+  .lic{margin-top:10px;font-size:11px;color:var(--s500)}
+  .btns{margin-top:16px;display:flex;gap:8px}
+  .btn{flex:1;text-align:center;font-size:13px;font-weight:600;border-radius:8px;padding:9px 0;text-decoration:none}
+  .btn.ghost{border:1px solid var(--em);color:var(--em7)}
+  .btn.solid{background:var(--em);color:#fff}
+
+  /* === warianty bejdzy === */
+  /* A: pasek-wstazka w rogu (corner ribbon) */
+  .ribbon{position:absolute;top:14px;right:-34px;transform:rotate(45deg);background:var(--amber500);color:#fff;font-size:11px;font-weight:800;letter-spacing:.5px;padding:4px 40px;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+
+  /* B: plaska etykieta na gorze karty (top bar) */
+  .topbar{margin:-20px -20px 16px;background:linear-gradient(90deg,var(--em7),var(--em));color:#fff;font-size:12px;font-weight:800;letter-spacing:.5px;padding:7px 16px;display:flex;align-items:center;gap:6px}
+
+  /* C: pill obok nazwy / nad logo (inline) */
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;letter-spacing:.3px;border-radius:999px;padding:3px 10px}
+  .pill.gold{background:#fef3c7;color:#b45309}
+  .pill.green{background:var(--em100);color:var(--em7)}
+  .pill.blue{background:#dbeafe;color:#1d4ed8}
+  .pill.rose{background:#ffe4e6;color:#be123c}
+  .pill.violet{background:#ede9fe;color:#6d28d9}
+  .pillrow{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+
+  /* D: floating tab nad karta */
+  .tab{position:absolute;top:-1px;left:20px;background:var(--amber500);color:#fff;font-size:11px;font-weight:800;letter-spacing:.4px;padding:4px 12px;border-radius:0 0 8px 8px}
+
+  .palette{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+  .note{font-size:12px;color:var(--s500);margin-top:14px}
+  .legend{font-size:12.5px;color:var(--s600);margin:0 0 14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Ескіз: бейджі «ТОП-вибір» на картках казино</h1>
+  <p class="lead">Бейдж — це кольорова мітка, що виділяє картку та підказує користувачу, чому вона важлива. Нижче — 4 стилі розташування (A–D) і палітра типів бейджів. Обери стиль (можна комбінувати) і які типи бейджів заводимо.</p>
+
+  <!-- A -->
+  <section class="feat">
+    <h2>Стиль A — кутова стрічка (corner ribbon)</h2>
+    <p class="why">Класика рейтингів: діагональна стрічка в куті. Максимально помітна, не займає місця в контенті. Найкраще — для №1 / «ТОП-вибір».</p>
+    <div class="grid">
+      <div class="card hl">
+        <div class="ribbon">ТОП-ВИБІР</div>
+        <div class="chead"><span class="rank">1</span><span class="logo" style="background:#059669">PariMatch</span><span class="rate">★ 4.7<small>/5</small></span></div>
+        <h3 class="cname">PariMatch</h3>
+        <div class="bonus">150% до 45 000 ₴</div>
+        <div class="lic">Ліцензія: КРАІЛ · №150-2021</div>
+        <div class="btns"><a class="btn ghost" href="#">Детальніше</a><a class="btn solid" href="#">Грати</a></div>
+      </div>
+      <div class="card">
+        <div class="ribbon" style="background:#7c3aed">НОВИНКА</div>
+        <div class="chead"><span class="rank">2</span><span class="logo" style="background:#dc2626">Pin-Up</span><span class="rate">★ 4.6<small>/5</small></span></div>
+        <h3 class="cname">Pin-Up</h3>
+        <div class="bonus">150% + 250 FS</div>
+        <div class="lic">Ліцензія: КРАІЛ</div>
+        <div class="btns"><a class="btn ghost" href="#">Детальніше</a><a class="btn solid" href="#">Грати</a></div>
+      </div>
+      <div class="card">
+        <div class="chead"><span class="rank">3</span><span class="logo" style="background:#0891b2">Cosmobet</span><span class="rate">★ 4.4<small>/5</small></span></div>
+        <h3 class="cname">Cosmobet</h3>
+        <div class="bonus">120% до 15 000 ₴</div>
+        <div class="lic">Ліцензія: КРАІЛ</div>
+        <div class="btns"><a class="btn ghost" href="#">Детальніше</a><a class="btn solid" href="#">Грати</a></div>
+      </div>
+    </div>
+    <p class="note">↑ Картка без бейджа (3-я) показує, що бейдж — опційний: ставимо лише там, де треба виділити.</p>
+  </section>
+
+  <!-- B -->
+  <section class="feat">
+    <h2>Стиль B — кольорова смуга зверху картки (top bar)</h2>
+    <p class="why">Повноширока плашка над контентом. Дуже «голосна», добре працює для єдиного флагмана на сторінці. Можна писати довший текст.</p>
+    <div class="grid">
+      <div class="card hl">
+        <div class="topbar">★ РЕДАКТОРСЬКИЙ ВИБІР</div>
+        <div class="chead"><span class="rank">1</span><span class="logo" style="background:#059669">PariMatch</span><span class="rate">★ 4.7<small>/5</small></span></div>
+        <h3 class="cname">PariMatch</h3>
+        <div class="bonus">150% до 45 000 ₴</div>
+        <div class="lic">Ліцензія: КРАІЛ · №150-2021</div>
+        <div class="btns"><a class="btn ghost" href="#">Детальніше</a><a class="btn solid" href="#">Грати</a></div>
+      </div>
+      <div class="card">
+        <div class="topbar" style="background:linear-gradient(90deg,#b45309,#f59e0b)">⚡ НАЙШВИДШІ ВИПЛАТИ</div>
+        <div class="chead"><span class="rank">2</span><span class="logo" style="background:#7c3aed">Cosmolot</span><span class="rate">★ 4.6<small>/5</small></span></div>
+        <h3 class="cname">Cosmolot</h3>
+        <div class="bonus">100% + 50 FS</div>
+        <div class="lic">Ліцензія: КРАІЛ</div>
+        <div class="btns"><a class="btn ghost" href="#">Детальніше</a><a class="btn solid" href="#">Грати</a></div>
+      </div>
+      <div class="card">
+        <div class="topbar" style="background:linear-gradient(90deg,#1d4ed8,#3b82f6)">🎁 ЕКСКЛЮЗИВНИЙ БОНУС</div>
+        <div class="chead"><span class="rank">3</span><span class="logo" style="background:#1d4ed8">FavBet</span><span class="rate">★ 4.5<small>/5</small></span></div>
+        <h3 class="cname">FavBet</h3>
+        <div class="bonus">100% до 20 000 ₴ + промокод</div>
+        <div class="lic">Ліцензія: КРАІЛ</div>
+        <div class="btns"><a class="btn ghost" href="#">Детальніше</a><a class="btn solid" href="#">Грати</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- C -->
+  <section class="feat">
+    <h2>Стиль C — пігулки в ряд (inline pills) <span style="font-weight:400;color:var(--s500);font-size:14px">— рекомендований</span></h2>
+    <p class="why">Найгнучкіший: маленькі «пігулки» над назвою. На одну картку можна повісити кілька (напр. «ТОП-вибір» + «Швидкі виплати»). Делікатні, не кричать, легко керувати кольором за типом. Найкраще лягає в наш мінімалістичний стиль.</p>
+    <div class="grid">
+      <div class="card hl">
+        <div class="chead"><span class="rank">1</span><span class="logo" style="background:#059669">PariMatch</span><span class="rate">★ 4.7<small>/5</small></span></div>
+        <div class="pillrow" style="margin-top:12px;margin-bottom:0">
+          <span class="pill gold">★ ТОП-ВИБІР</span>
+          <span class="pill green">⚡ ШВИДКІ ВИПЛАТИ</span>
+        </div>
+        <h3 class="cname">PariMatch</h3>
+        <div class="bonus">150% до 45 000 ₴</div>
+        <div class="lic">Ліцензія: КРАІЛ · №150-2021</div>
+        <div class="btns"><a class="btn ghost" href="#">Детальніше</a><a class="btn solid" href="#">Грати</a></div>
+      </div>
+      <div class="card">
+        <div class="chead"><span class="rank">2</span><span class="logo" style="background:#7c3aed">Cosmolot</span><span class="rate">★ 4.6<small>/5</small></span></div>
+        <div class="pillrow" style="margin-top:12px;margin-bottom:0">
+          <span class="pill violet">✦ НОВИНКА</span>
+        </div>
+        <h3 class="cname">Cosmolot</h3>
+        <div class="bonus">100% + 50 FS</div>
+        <div class="lic">Ліцензія: КРАІЛ</div>
+        <div class="btns"><a class="btn ghost" href="#">Детальніше</a><a class="btn solid" href="#">Грати</a></div>
+      </div>
+      <div class="card">
+        <div class="chead"><span class="rank">3</span><span class="logo" style="background:#1d4ed8">FavBet</span><span class="rate">★ 4.5<small>/5</small></span></div>
+        <div class="pillrow" style="margin-top:12px;margin-bottom:0">
+          <span class="pill blue">🎁 ЕКСКЛЮЗИВ</span>
+          <span class="pill rose">★ ПОПУЛЯРНЕ</span>
+        </div>
+        <h3 class="cname">FavBet</h3>
+        <div class="bonus">100% до 20 000 ₴</div>
+        <div class="lic">Ліцензія: КРАІЛ</div>
+        <div class="btns"><a class="btn ghost" href="#">Детальніше</a><a class="btn solid" href="#">Грати</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- D -->
+  <section class="feat">
+    <h2>Стиль D — язичок над карткою (floating tab)</h2>
+    <p class="why">Невеликий «язичок», що ніби «приклеєний» зверху до картки. Компромісний варіант: помітніший за пігулку, скромніший за стрічку.</p>
+    <div class="grid">
+      <div class="card hl" style="margin-top:14px">
+        <div class="tab">★ ТОП-ВИБІР</div>
+        <div class="chead"><span class="rank">1</span><span class="logo" style="background:#059669">PariMatch</span><span class="rate">★ 4.7<small>/5</small></span></div>
+        <h3 class="cname">PariMatch</h3>
+        <div class="bonus">150% до 45 000 ₴</div>
+        <div class="lic">Ліцензія: КРАІЛ · №150-2021</div>
+        <div class="btns"><a class="btn ghost" href="#">Детальніше</a><a class="btn solid" href="#">Грати</a></div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <div class="tab" style="background:#7c3aed">✦ НОВИНКА</div>
+        <div class="chead"><span class="rank">2</span><span class="logo" style="background:#7c3aed">Cosmolot</span><span class="rate">★ 4.6<small>/5</small></span></div>
+        <h3 class="cname">Cosmolot</h3>
+        <div class="bonus">100% + 50 FS</div>
+        <div class="lic">Ліцензія: КРАІЛ</div>
+        <div class="btns"><a class="btn ghost" href="#">Детальніше</a><a class="btn solid" href="#">Грати</a></div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <div class="tab" style="background:#1d4ed8">🎁 ЕКСКЛЮЗИВ</div>
+        <div class="chead"><span class="rank">3</span><span class="logo" style="background:#1d4ed8">FavBet</span><span class="rate">★ 4.5<small>/5</small></span></div>
+        <h3 class="cname">FavBet</h3>
+        <div class="bonus">100% до 20 000 ₴</div>
+        <div class="lic">Ліцензія: КРАІЛ</div>
+        <div class="btns"><a class="btn ghost" href="#">Детальніше</a><a class="btn solid" href="#">Грати</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- palette -->
+  <section class="feat">
+    <h2>Типи бейджів (палітра)</h2>
+    <p class="legend">Кожному типу — свій колір, щоб користувач упізнавав їх по сайту. Можна завести стільки, скільки потрібно:</p>
+    <div class="palette">
+      <span class="pill gold">★ ТОП-ВИБІР</span>
+      <span class="pill green">⚡ ШВИДКІ ВИПЛАТИ</span>
+      <span class="pill blue">🎁 ЕКСКЛЮЗИВ</span>
+      <span class="pill violet">✦ НОВИНКА</span>
+      <span class="pill rose">★ ПОПУЛЯРНЕ</span>
+      <span class="pill green">✓ РЕДАКТОРСЬКИЙ ВИБІР</span>
+      <span class="pill gold">💰 ВЕЛИКИЙ БОНУС</span>
+      <span class="pill blue">📱 МОБІЛЬНЕ</span>
+    </div>
+    <p class="note">Технічно: додам у модель Casino поле(-я) для бейджів (напр. текстовий список «top,fast,exclusive»), редагую в БД — і бейджі з'являються на картці. Двомовність (укр/рос) через словник у i18n.</p>
+  </section>
+
+  <p style="color:var(--s500);font-size:13px;text-align:center;margin:8px 0 40px">Це лише ескіз для оцінки вигляду. Реальні шаблони ще не змінені.</p>
+</div>
+</body>
+</html>

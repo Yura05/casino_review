@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 215 64" width="215" height="64" role="img" aria-label="Cosmolot">
+  <rect width="215" height="64" rx="12" fill="#6d28d9"/>
+  <path d="M32 16l4.3 9.3L46 26.6l-7.2 6.5 1.9 9.9L32 38.2l-8.7 4.8 1.9-9.9L18 26.6l9.7-1.3z" fill="#fde047"/>
+  <circle cx="44" cy="18" r="2.5" fill="#ffffff"/>
+  <text x="58" y="40" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#ffffff">Cosmo<tspan fill="#c4b5fd">lot</tspan></text>
+</svg>

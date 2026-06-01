@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 215 64" width="215" height="64" role="img" aria-label="Slotoking">
+  <rect width="215" height="64" rx="12" fill="#1f2937"/>
+  <path d="M18 42h28l3-19-9 7-8-12-8 12-9-7z" fill="#fbbf24"/>
+  <rect x="18" y="42" width="28" height="4" rx="1" fill="#fbbf24"/>
+  <text x="58" y="40" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#ffffff">Sloto<tspan fill="#fbbf24">king</tspan></text>
+</svg>

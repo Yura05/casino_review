@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 205 64" width="205" height="64" role="img" aria-label="VictorBet">
+  <rect width="205" height="64" rx="12" fill="#0d9488"/>
+  <path d="M20 20l12 24 12-24" fill="none" stroke="#5eead4" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M26 18l6 6 6-6" fill="none" stroke="#ffffff" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <text x="58" y="40" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#ffffff">Victor<tspan fill="#5eead4">Bet</tspan></text>
+</svg>

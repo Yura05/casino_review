@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Политика конфиденциальности — {{ site_name }}{% endblock %}
+{% block description %}Политика конфиденциальности {{ site_name }}: какие данные мы собираем, как используем файлы cookie и какие у вас права.{% endblock %}
+
+{% block content %}
+{% from "partials/macros.html" import breadcrumbs %}
+<div class="max-w-3xl">
+  {{ breadcrumbs([
+    {"name": t.breadcrumb_home, "url": "/" ~ lang ~ "/"},
+    {"name": "Политика конфиденциальности", "url": "/" ~ lang ~ "/privacy/"}
+  ], site_url) }}
+  <h1 class="text-3xl font-bold text-slate-900">Политика конфиденциальности</h1>
+
+  <p class="mt-4 text-slate-700 leading-relaxed">
+    Эта политика описывает, какие данные собирает {{ site_name }} и как мы их используем.
+    Пользуясь сайтом, вы соглашаетесь с условиями этой политики.
+  </p>
+
+  <h2 class="mt-8 text-xl font-bold text-slate-900">Какие данные мы собираем</h2>
+  <ul class="mt-3 list-disc list-inside space-y-1 text-slate-700">
+    <li>Технические данные: IP-адрес, тип браузера, устройство (анонимно).</li>
+    <li>Данные об использовании сайта через инструменты аналитики.</li>
+    <li>Файлы cookie (см. раздел ниже).</li>
+  </ul>
+
+  <h2 class="mt-8 text-xl font-bold text-slate-900">Как мы используем данные</h2>
+  <ul class="mt-3 list-disc list-inside space-y-1 text-slate-700">
+    <li>Для улучшения работы и удобства сайта.</li>
+    <li>Для анализа посещаемости и популярности контента.</li>
+    <li>Для соблюдения правовых требований.</li>
+  </ul>
+
+  <h2 class="mt-8 text-xl font-bold text-slate-900">Файлы cookie</h2>
+  <p class="mt-3 text-slate-700 leading-relaxed">
+    Сайт использует файлы cookie для корректной работы и аналитики. Вы можете
+    отключить cookie в настройках браузера, однако некоторые функции могут работать некорректно.
+  </p>
+
+  <h2 class="mt-8 text-xl font-bold text-slate-900">Третьи стороны</h2>
+  <p class="mt-3 text-slate-700 leading-relaxed">
+    Мы можем использовать сторонние сервисы аналитики, а также партнёрские
+    (аффилейт) ссылки. Такие сервисы могут собирать данные в соответствии с собственными политиками конфиденциальности.
+  </p>
+
+  <h2 class="mt-8 text-xl font-bold text-slate-900">Ваши права</h2>
+  <p class="mt-3 text-slate-700 leading-relaxed">
+    Вы имеете право запросить информацию о своих данных, их исправление или удаление.
+    Для этого обращайтесь: <span class="text-slate-500">[добавить email]</span>.
+  </p>
+
+  <p class="mt-8 text-slate-500 text-sm">Последнее обновление: [добавить дату].</p>
+</div>
+{% endblock %}

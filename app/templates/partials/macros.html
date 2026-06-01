@@ -1,0 +1,95 @@
+{# Reużywalne makra UI. Import w szablonie:
+   {% from "partials/macros.html" import stars, pay_icons %}
+   (w szablonach z {% extends %} import MUSI być wewnątrz {% block %}, inaczej nie wykona się). #}
+
+{# Gwiazdki oceny 0–5 (pół-gwiazdki przez nakładkę szerokości, bez JS).
+   value: liczba 0–5; size: klasa rozmiaru czcionki (np. "text-sm", "text-lg"). #}
+{% macro stars(value, size="text-sm") -%}
+{%- set pct = (value or 0) / 5 * 100 -%}
+<span class="relative inline-block align-middle whitespace-nowrap leading-none {{ size }}" role="img" aria-label="{{ "%.1f"|format(value or 0) }}/5">
+  <span class="text-slate-300">★★★★★</span>
+  <span class="absolute inset-0 overflow-hidden text-amber-500" style="width: {{ "%.1f"|format(pct) }}%">★★★★★</span>
+</span>
+{%- endmacro %}
+
+{# Ikony metod płatności z CSV (np. "Visa,Mastercard,Приват24,Apple Pay").
+   Nieznany token → szara plakietka tekstowa (fallback). Duplikaty ikon pomijane. #}
+{% macro pay_icons(csv) -%}
+{%- set icons = {
+  "visa": "visa", "mastercard": "mastercard", "maestro": "mastercard",
+  "privat24": "privat24", "приват24": "privat24",
+  "apple pay": "apple-pay", "google pay": "google-pay",
+  "btc": "crypto", "usdt": "crypto", "crypto": "crypto", "bitcoin": "crypto"
+} -%}
+{%- set ns = namespace(seen=[]) -%}
+<div class="mt-3 flex flex-wrap items-center gap-2">
+  {%- for raw in csv.split(",") -%}
+    {%- set key = raw|trim|lower -%}
+    {%- set slug = icons.get(key) -%}
+    {%- if slug and slug not in ns.seen -%}
+      {%- set ns.seen = ns.seen + [slug] -%}
+      <img src="/static/img/payments/{{ slug }}.svg" alt="{{ raw|trim }}" title="{{ raw|trim }}" class="h-7 w-auto" width="48" height="30" loading="lazy">
+    {%- elif not slug -%}
+      <span class="text-xs bg-slate-100 text-slate-600 rounded px-2 py-0.5">{{ raw|trim }}</span>
+    {%- endif -%}
+  {%- endfor -%}
+</div>
+{%- endmacro %}
+
+{# Bejdże kasyna — pigułki (inline pills) nad nazwą na karcie / w hero.
+   csv: lista kluczy po przecinku (np. "top,fast"). t: słownik tłumaczeń (etykiety dwujęzyczne).
+   Ikona + kolor = prezentacja (tu), tekst = i18n (badge_*). Duplikaty i nieznane klucze pomijane. #}
+{% macro casino_badges(csv, t) -%}
+{%- set meta = {
+  "top":       {"icon": "★", "cls": "bg-amber-100 text-amber-700",     "key": "badge_top"},
+  "editor":    {"icon": "✓", "cls": "bg-emerald-100 text-emerald-700", "key": "badge_editor"},
+  "fast":      {"icon": "⚡", "cls": "bg-emerald-100 text-emerald-700", "key": "badge_fast"},
+  "exclusive": {"icon": "◆", "cls": "bg-blue-100 text-blue-700",        "key": "badge_exclusive"},
+  "new":       {"icon": "✦", "cls": "bg-violet-100 text-violet-700",    "key": "badge_new"},
+  "popular":   {"icon": "★", "cls": "bg-rose-100 text-rose-700",        "key": "badge_popular"},
+  "bonus":     {"icon": "%", "cls": "bg-amber-100 text-amber-700",      "key": "badge_bonus"},
+  "mobile":    {"icon": "▣", "cls": "bg-blue-100 text-blue-700",        "key": "badge_mobile"}
+} -%}
+{%- set ns = namespace(seen=[]) -%}
+{%- set rendered = [] -%}
+{%- for raw in (csv or "").split(",") -%}
+  {%- set k = raw|trim|lower -%}
+  {%- if k in meta and k not in ns.seen -%}
+    {%- set ns.seen = ns.seen + [k] -%}
+    {%- set _ = rendered.append(meta[k]) -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- if rendered -%}
+<div class="flex flex-wrap gap-1.5">
+  {%- for m in rendered -%}
+  <span class="inline-flex items-center gap-1 text-[11px] font-bold tracking-wide rounded-full px-2.5 py-0.5 {{ m.cls }}">{{ m.icon }} {{ t[m.key] }}</span>
+  {%- endfor -%}
+</div>
+{%- endif -%}
+{%- endmacro %}
+
+{# Okruszki nawigacyjne (breadcrumbs) + JSON-LD BreadcrumbList (SEO).
+   items: lista dictów {name, url}. url = ścieżka od "/" (np. "/uk/casino/x/").
+   Ostatni element = bieżąca strona (renderowany jako tekst, ale jego url trafia do JSON-LD).
+   site_url: bazowy adres serwisu (do absolutnych URL-i w schema.org). #}
+{% macro breadcrumbs(items, site_url="") -%}
+{%- if items and items|length > 1 -%}
+<nav aria-label="breadcrumb" class="mb-4 text-sm text-slate-500">
+  <ol class="flex flex-wrap items-center gap-x-1.5 gap-y-1">
+    {%- for item in items -%}
+    <li class="flex items-center gap-x-1.5">
+      {%- if not loop.last and item.url -%}
+      <a href="{{ item.url }}" class="hover:text-emerald-700 hover:underline">{{ item.name }}</a>
+      {%- elif loop.last -%}
+      <span class="font-medium text-slate-700" aria-current="page">{{ item.name }}</span>
+      {%- else -%}
+      <span class="text-slate-400">{{ item.name }}</span>
+      {%- endif -%}
+      {%- if not loop.last -%}<span class="text-slate-300" aria-hidden="true">/</span>{%- endif -%}
+    </li>
+    {%- endfor -%}
+  </ol>
+</nav>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{% for item in items %}{"@type":"ListItem","position":{{ loop.index }},"name":{{ item.name|tojson }}{% if item.url %},"item":{{ (site_url ~ item.url)|tojson }}{% endif %}}{% if not loop.last %},{% endif %}{% endfor %}]}</script>
+{%- endif -%}
+{%- endmacro %}
