@@ -19,7 +19,9 @@ User=casino
 Group=casino
 WorkingDirectory=/home/casino/site_revie
 EnvironmentFile=/home/casino/site_revie/.env
-ExecStart=/home/casino/site_revie/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000 --workers 2
+# --proxy-headers: довіряти X-Forwarded-* від nginx (правильна схема https в url_for).
+# --forwarded-allow-ips=*: безпечно, бо uvicorn слухає лише 127.0.0.1 (ззовні недоступний).
+ExecStart=/home/casino/site_revie/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000 --workers 2 --proxy-headers --forwarded-allow-ips=*
 Restart=always
 RestartSec=3
 

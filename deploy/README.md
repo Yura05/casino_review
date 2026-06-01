@@ -76,7 +76,7 @@ CREATE DATABASE casino_review OWNER casino;
 
 ```bash
 su - casino
-git clone https://github.com/ТВІЙ_ЛОГІН/casino-review.git site_revie
+git clone https://github.com/Yura05/casino_review.git site_revie
 cd site_revie
 
 # віртуальне середовище + залежності
