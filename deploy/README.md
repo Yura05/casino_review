@@ -140,7 +140,7 @@ curl -s http://127.0.0.1:8000/health           # очікуємо {"status":"ok"
 ```bash
 # конфіг сайту
 sudo cp /home/casino/site_revie/deploy/nginx-casino-review.conf /etc/nginx/sites-available/casino-review
-sudo nano /etc/nginx/sites-available/casino-review   # заміни example.com на свій домен (2 місця)
+# server_name уже містить casinorank.com.ua — додатково редагувати не треба
 
 sudo ln -s /etc/nginx/sites-available/casino-review /etc/nginx/sites-enabled/
 sudo rm -f /etc/nginx/sites-enabled/default          # прибрати дефолтну заглушку
@@ -154,7 +154,7 @@ sudo nginx -t && sudo systemctl reload nginx
 
 ```bash
 sudo apt install -y certbot python3-certbot-nginx
-sudo certbot --nginx -d example.com -d www.example.com
+sudo certbot --nginx -d casinorank.com.ua -d www.casinorank.com.ua
 ```
 
 Certbot сам допише SSL у nginx-конфіг і налаштує автопродовження.
