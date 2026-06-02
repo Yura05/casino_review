@@ -43,15 +43,20 @@ apt update && apt upgrade -y
 adduser casino            # задай пароль, решту полів можна Enter
 usermod -aG sudo casino   # дати право на sudo
 
-# сучасний Python 3.12 (Ubuntu 20.04 має лише 3.8 — нам треба 3.10+)
-apt install -y software-properties-common
-add-apt-repository -y ppa:deadsnakes/ppa
-apt update
-apt install -y python3.12 python3.12-venv python3.12-dev
+# сучасний Python 3.12 через uv (Ubuntu 20.04 має лише 3.8 — нам треба 3.10+,
+# а deadsnakes для focal не віддає 3.12). uv завантажує ГОТОВИЙ standalone
+# CPython 3.12 — без компіляції й сторонніх репозиторіїв.
+apt install -y curl
+curl -LsSf https://astral.sh/uv/install.sh | sh
+export PATH="$HOME/.local/bin:$PATH"
+export UV_PYTHON_INSTALL_DIR=/opt/python      # спільна тека, доступна всім користувачам
+uv python install 3.12
+ln -sf "$(uv python find 3.12)" /usr/local/bin/python3.12   # робимо командою python3.12
+chmod -R a+rX /opt/python
+python3.12 --version    # має показати Python 3.12.x
 
 # решта потрібного
 apt install -y git nginx postgresql postgresql-contrib build-essential libpq-dev
-python3.12 --version    # має показати Python 3.12.x
 ```
 
 ---
