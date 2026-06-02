@@ -329,6 +329,7 @@ def seed_slots(db) -> None:
             slug=slug, name_uk=name_uk, name_ru=name_ru, provider=provider,
             rtp=rtp, paylines=paylines, volatility_uk=vol[0], volatility_ru=vol[1],
             description_uk=desc_uk, description_ru=desc_ru,
+            image=f"img/slots/{slug}.svg",  # plik SVG po slugu w static/img/slots/
         )
 
     slots = [
