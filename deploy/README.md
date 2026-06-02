@@ -190,7 +190,7 @@ cat ~/.ssh/gh_deploy                                  # ПРИВАТНИЙ кл�
 Дозволимо casino рестартувати сервіс без пароля (потрібно для update.sh):
 
 ```bash
-echo "casino ALL=(ALL) NOPASSWD: /bin/systemctl restart casino-review" | sudo tee /etc/sudoers.d/casino-deploy
+echo "casino ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart casino-review" | sudo tee /etc/sudoers.d/casino-deploy
 sudo chmod 440 /etc/sudoers.d/casino-deploy
 ```
 
