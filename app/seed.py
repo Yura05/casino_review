@@ -111,6 +111,7 @@ def seed_casinos(db) -> None:
     for d in data:
         c = Casino(
             slug=d["slug"], name=d["name"], rating=d["rating"],
+            logo=f"img/casinos/{d['slug']}.svg",  # plik SVG po slugu w static/img/casinos/
             license="КРАІЛ", license_number=d["lic"], established=d["est"],
             min_deposit=d["dep"], payment_methods=d["pay"], badges=d.get("badges"),
             affiliate_link=f"https://example.com/go/{d['slug']}",
