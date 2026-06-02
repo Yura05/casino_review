@@ -43,8 +43,15 @@ apt update && apt upgrade -y
 adduser casino            # задай пароль, решту полів можна Enter
 usermod -aG sudo casino   # дати право на sudo
 
-# поставити все потрібне
-apt install -y python3 python3-venv python3-pip git nginx postgresql postgresql-contrib
+# сучасний Python 3.12 (Ubuntu 20.04 має лише 3.8 — нам треба 3.10+)
+apt install -y software-properties-common
+add-apt-repository -y ppa:deadsnakes/ppa
+apt update
+apt install -y python3.12 python3.12-venv python3.12-dev
+
+# решта потрібного
+apt install -y git nginx postgresql postgresql-contrib build-essential libpq-dev
+python3.12 --version    # має показати Python 3.12.x
 ```
 
 ---
@@ -79,8 +86,8 @@ su - casino
 git clone https://github.com/Yura05/casino_review.git site_revie
 cd site_revie
 
-# віртуальне середовище + залежності
-python3 -m venv .venv
+# віртуальне середовище НА Python 3.12 + залежності
+python3.12 -m venv .venv
 .venv/bin/pip install --upgrade pip
 .venv/bin/pip install -r requirements.txt
 ```
