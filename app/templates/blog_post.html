@@ -20,9 +20,7 @@
   <p class="mt-2 text-sm text-slate-400">{{ post.published_at.strftime('%d.%m.%Y') }}</p>
 
   <div class="mt-6">
-    {% for para in paragraphs %}
-    <p class="mt-4 text-slate-700 leading-relaxed">{{ para }}</p>
-    {% endfor %}
+    {{ post.loc('body', lang) | richtext }}
   </div>
 </article>
 {% endblock %}

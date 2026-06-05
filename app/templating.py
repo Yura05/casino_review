@@ -46,10 +46,12 @@ templates.env.filters["lines"] = _lines
 
 
 def _richtext(text: str | None) -> Markup:
-    """Lekki markdown -> ostylowany HTML dla dlugich recenzji.
+    """Lekki markdown -> ostylowany HTML dla dlugich recenzji i artykulow.
 
     Obsluguje:
-      `## ` -> <h2>, `### ` -> <h3>, `- ` -> lista <ul><li>,
+      `## ` -> <h2>, `### ` -> <h3>,
+      `- ` -> lista <ul><li>, `1. ` -> lista numerowana <ol><li>,
+      tabele markdown (| a | b | + wiersz `|---|---|`),
       `**pogrubienie**`, akapity (linie oddzielone pusta linia).
 
     Tresc jest AUTORSKA (z naszej bazy, nie od uzytkownika), wiec zwracamy
@@ -62,9 +64,12 @@ def _richtext(text: str | None) -> Markup:
         s = str(escape(s))
         return re.sub(r"\*\*(.+?)\*\*", r'<strong class="font-semibold text-slate-900">\1</strong>', s)
 
+    def cells(row: str) -> list[str]:
+        return [c.strip() for c in row.strip().strip("|").split("|")]
+
     out: list[str] = []
     para: list[str] = []
-    in_list = False
+    list_type: str | None = None  # None | "ul" | "ol"
 
     def flush_para() -> None:
         if para:
@@ -72,16 +77,50 @@ def _richtext(text: str | None) -> Markup:
             para.clear()
 
     def close_list() -> None:
-        nonlocal in_list
-        if in_list:
-            out.append("</ul>")
-            in_list = False
+        nonlocal list_type
+        if list_type:
+            out.append(f"</{list_type}>")
+            list_type = None
 
-    for raw in text.split("\n"):
-        line = raw.strip()
+    lines = text.split("\n")
+    i = 0
+    n = len(lines)
+    while i < n:
+        line = lines[i].strip()
+        nxt = lines[i + 1].strip() if i + 1 < n else ""
+
+        # --- Tabela: naglowek '| a | b |' + separator '|---|---|' ---
+        if (
+            line.startswith("|")
+            and nxt.startswith("|")
+            and set(nxt) <= set("|-: ")
+            and "-" in nxt
+        ):
+            flush_para(); close_list()
+            header = cells(line)
+            rows: list[list[str]] = []
+            i += 2
+            while i < n and lines[i].strip().startswith("|"):
+                rows.append(cells(lines[i]))
+                i += 1
+            thead = "".join(
+                f'<th class="p-3 border-b border-slate-200 font-semibold">{inline(h)}</th>' for h in header
+            )
+            tbody = "".join(
+                "<tr>" + "".join(
+                    f'<td class="p-3 border-b border-slate-100 align-top">{inline(c)}</td>' for c in row
+                ) + "</tr>"
+                for row in rows
+            )
+            out.append(
+                '<div class="mt-4 overflow-x-auto"><table class="w-full text-sm text-left border border-slate-200">'
+                f'<thead><tr class="bg-slate-100 text-slate-700">{thead}</tr></thead>'
+                f'<tbody class="text-slate-700">{tbody}</tbody></table></div>'
+            )
+            continue
+
         if not line:
-            flush_para()
-            close_list()
+            flush_para(); close_list()
         elif line.startswith("### "):
             flush_para(); close_list()
             out.append('<h3 class="mt-6 mb-1 font-bold text-slate-900">' + inline(line[4:]) + "</h3>")
@@ -90,12 +129,21 @@ def _richtext(text: str | None) -> Markup:
             out.append('<h2 class="mt-8 mb-2 text-xl font-bold text-slate-900">' + inline(line[3:]) + "</h2>")
         elif line.startswith("- "):
             flush_para()
-            if not in_list:
+            if list_type != "ul":
+                close_list()
                 out.append('<ul class="mt-3 space-y-1 list-disc pl-5 text-slate-700 leading-relaxed">')
-                in_list = True
+                list_type = "ul"
             out.append("<li>" + inline(line[2:]) + "</li>")
+        elif re.match(r"^\d+\.\s", line):
+            flush_para()
+            if list_type != "ol":
+                close_list()
+                out.append('<ol class="mt-3 space-y-1 list-decimal pl-5 text-slate-700 leading-relaxed">')
+                list_type = "ol"
+            out.append("<li>" + inline(re.sub(r"^\d+\.\s", "", line)) + "</li>")
         else:
             para.append(line)
+        i += 1
 
     flush_para()
     close_list()
