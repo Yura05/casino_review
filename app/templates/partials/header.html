@@ -98,8 +98,6 @@
         </div>
       </div>
 
-      <a href="/{{ lang }}/blog/" class="hover:text-emerald-600">{{ t.nav_blog }}</a>
-      <a href="/{{ lang }}/pro-nas/" class="hover:text-emerald-600">{{ t.nav_about }}</a>
     </nav>
 
     <div class="flex items-center gap-3">
@@ -125,43 +123,40 @@
           </svg>
         </summary>
         <nav class="absolute right-0 top-full mt-2 w-56 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-20 flex flex-col text-sm font-medium">
-          {# Kasyna: nagłówek sekcji (nie link) + kategorie #}
-          <p class="px-4 pt-1 pb-1 text-xs uppercase tracking-wide text-slate-400">{{ t.nav_casinos }}</p>
+          {# Kasyna #}
+          <p class="mx-4 mt-2 mb-1 pb-1 border-b-2 border-emerald-500 text-sm font-bold text-slate-800">{{ t.nav_casinos }}</p>
           <a href="/{{ lang }}/" class="px-4 py-2 hover:bg-slate-50">{{ t.casino_all }}</a>
           {% for c in category_nav %}
           <a href="/{{ lang }}/kategoriya/{{ c.slug }}/" class="px-4 py-2 hover:bg-slate-50">{{ c.name }}</a>
           {% endfor %}
 
-          {# Bonusy: nagłówek sekcji (nie link) + lista typów #}
-          <p class="px-4 pt-3 pb-1 text-xs uppercase tracking-wide text-slate-400">{{ t.nav_bonuses }}</p>
+          {# Bonusy #}
+          <p class="mx-4 mt-4 mb-1 pb-1 border-b-2 border-emerald-500 text-sm font-bold text-slate-800">{{ t.nav_bonuses }}</p>
           <a href="/{{ lang }}/bonusy/" class="px-4 py-2 hover:bg-slate-50">{{ t.bonus_all }}</a>
           {% for b in bonus_nav %}
           <a href="/{{ lang }}/bonusy/{{ b.slug }}/" class="px-4 py-2 hover:bg-slate-50">{{ b.name }}</a>
           {% endfor %}
 
-          <a href="/{{ lang }}/blog/" class="px-4 py-2 hover:bg-slate-50 mt-1">{{ t.nav_blog }}</a>
-          <a href="/{{ lang }}/pro-nas/" class="px-4 py-2 hover:bg-slate-50">{{ t.nav_about }}</a>
-
-          {# Metody płatności: nagłówek sekcji (nie link) + lista metod #}
-          <p class="px-4 pt-3 pb-1 text-xs uppercase tracking-wide text-slate-400">{{ t.nav_payments }}</p>
-          {% for pm in payment_methods %}
-          <a href="/{{ lang }}/oplata/{{ pm.slug }}/" class="px-4 py-2 hover:bg-slate-50">{{ pm.name }}</a>
-          {% endfor %}
-
-          {# Bukmacherzy: nagłówek sekcji (nie link) + kategorie zakładów #}
-          <p class="px-4 pt-3 pb-1 text-xs uppercase tracking-wide text-slate-400">{{ t.nav_bookmakers }}</p>
+          {# Bukmacherzy #}
+          <p class="mx-4 mt-4 mb-1 pb-1 border-b-2 border-emerald-500 text-sm font-bold text-slate-800">{{ t.nav_bookmakers }}</p>
           {% for c in betting_category_nav %}
           <a href="/{{ lang }}/bukmekery/{{ c.slug }}/" class="px-4 py-2 hover:bg-slate-50">{{ c.name }}</a>
           {% endfor %}
           <a href="/{{ lang }}/bukmekery/" class="px-4 py-2 hover:bg-slate-50 font-semibold">{{ t.bookmaker_all }} →</a>
 
-          {# Automaty do gry (sloty): nagłówek sekcji (nie link) + lista #}
-          <p class="px-4 pt-3 pb-1 text-xs uppercase tracking-wide text-slate-400">{{ t.nav_slots }}</p>
+          {# Automaty do gry (sloty) #}
+          <p class="mx-4 mt-4 mb-1 pb-1 border-b-2 border-emerald-500 text-sm font-bold text-slate-800">{{ t.nav_slots }}</p>
           <a href="/{{ lang }}/igrovi-avtomaty/bezkoshtovno/" class="px-4 py-2 hover:bg-slate-50">{{ t.slot_free }}</a>
           {% for s in slot_nav %}
           <a href="/{{ lang }}/slot/{{ s.slug }}/" class="px-4 py-2 hover:bg-slate-50">{{ t.slot_item_prefix }} {{ s.name }}</a>
           {% endfor %}
           <a href="/{{ lang }}/igrovi-avtomaty/" class="px-4 py-2 hover:bg-slate-50 font-semibold">{{ t.nav_slots }} →</a>
+
+          {# Metody płatności (na końcu) #}
+          <p class="mx-4 mt-4 mb-1 pb-1 border-b-2 border-emerald-500 text-sm font-bold text-slate-800">{{ t.nav_payments }}</p>
+          {% for pm in payment_methods %}
+          <a href="/{{ lang }}/oplata/{{ pm.slug }}/" class="px-4 py-2 hover:bg-slate-50">{{ pm.name }}</a>
+          {% endfor %}
         </nav>
       </details>
     </div>
